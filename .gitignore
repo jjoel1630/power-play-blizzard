@@ -1,0 +1,6 @@
+java_*.hprof
+.idea/
+.gradle/
+TeamCode/build
+FtcRobotController/build
+local.properties
