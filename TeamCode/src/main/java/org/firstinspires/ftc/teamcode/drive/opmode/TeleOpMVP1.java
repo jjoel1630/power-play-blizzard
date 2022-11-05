@@ -35,7 +35,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 @Config
 @TeleOp(name="TeleOpMVP1", group="Linear OpMode")
@@ -47,16 +49,30 @@ public class TeleOpMVP1 extends LinearOpMode {
     private DcMotorEx leftBackDrive = null;
     private DcMotorEx rightFrontDrive = null;
     private DcMotorEx rightBackDrive = null;
+//    private Servo claw = null;
+//
+//    public final static double CLAW_HOME = 0.0;
+//    public final static double CLAW_MIN = 0.0;
+//    public final static double CLAW_MAX = 1.0;
+//    public final static double CLAW_SPEED = 0.00;
+
 
     @Override
     public void runOpMode() {
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
+
         leftFrontDrive  = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftBackDrive  = hardwareMap.get(DcMotorEx.class, "leftRear");
         rightFrontDrive = hardwareMap.get(DcMotorEx.class, "rightFront");
         rightBackDrive = hardwareMap.get(DcMotorEx.class, "rightRear");
+//        claw = hardwareMap.servo.get("claw");
+//        claw = hardwareMap.get(Servo.class, "claw");
+//        claw.setPosition(0);
+//        double clawPosition = claw.getPosition();
+        
+
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -86,9 +102,35 @@ public class TeleOpMVP1 extends LinearOpMode {
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-            double lateral = -gamepad1.right_stick_x;
-            double yaw     =  gamepad1.left_stick_x;
+            double axial   = -gamepad1.left_stick_y;  // forward, back
+            double lateral = -gamepad1.right_stick_x; // turning
+            double yaw     =  gamepad1.left_stick_x; // side to side
+
+
+//            if(gamepad1.a)
+//                clawPosition += CLAW_SPEED;
+//
+//            else if(gamepad1.y)
+//                clawPosition -= CLAW_SPEED;
+//
+//            clawPosition = Range.clip(clawPosition, CLAW_MIN, CLAW_MAX);
+//            claw.setPosition(clawPosition);
+//
+//            telemetry.addData("claw", "%.2f", clawPosition);
+//            telemetry.addData("left", "%.2f", left);
+//            telemetry.addData("right", "%.2f", right);
+//            telemetry.update();
+
+
+
+
+
+            double axialCoefficient = 0.5;
+            double yawCoefficient = 0.5;
+            double lateralCoefficient = 0.4;
+            yaw = yaw * yawCoefficient;
+            axial = axial * axialCoefficient;
+            lateral = lateral * lateralCoefficient;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -130,6 +172,8 @@ public class TeleOpMVP1 extends LinearOpMode {
             */
 
             // Send calculated power to wheels
+
+
             leftFrontDrive.setPower(leftFrontPower);
             rightFrontDrive.setPower(rightFrontPower);
             leftBackDrive.setPower(leftBackPower);
