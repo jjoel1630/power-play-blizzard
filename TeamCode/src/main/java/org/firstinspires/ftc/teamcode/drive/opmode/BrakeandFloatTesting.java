@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ACCEL;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_VEL;
@@ -79,11 +80,11 @@ public class BrakeandFloatTesting extends LinearOpMode {
         waitForStart();
 
         while(!isStopRequested()) {
-            drive.setMotorPowers(5,5,5,5);
-//            drive.followTrajectory(traj1);
-//            drive.setMotorPowers(0,0,0,0);
-//            drive.setMotorPowers(5,5,5,5);
-//            drive.followTrajectory(traj2);
+//          drive.followTrajectory(traj1);
+            drive.setMotorPowers(3, 3, 3, 3);
+            drive.setMotorPowers(0, 0, 0, 0);
+//          drive.followTrajectory(traj2);
+//          drive.setMotorPowers(5,5,5,5);
         }
     }
 }

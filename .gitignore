@@ -1,7 +1,6 @@
-.gradle/
+java_*.hprof
 .idea/
-FtcRobotController/build/
-TeamCode/build/
-java_pid*.hprof
+.gradle/
+TeamCode/build
+FtcRobotController/build
 local.properties
-.DS_STORE
