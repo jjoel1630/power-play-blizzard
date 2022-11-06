@@ -30,20 +30,24 @@
 package org.firstinspires.ftc.teamcode.drive.opmode;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Config
-@TeleOp(name="TeleOpMVP1", group="Linear OpMode")
-public class TeleOpMVP1 extends LinearOpMode {
+@TeleOp(name="TeleOp5Cone", group="Linear OpMode")
+public class TeleOpFiveCone extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -51,52 +55,36 @@ public class TeleOpMVP1 extends LinearOpMode {
     private DcMotorEx leftBackDrive = null;
     private DcMotorEx rightFrontDrive = null;
     private DcMotorEx rightBackDrive = null;
-    private Servo claw;
 
-    public final static double CLAW_HOME = 0.0;
-    public final static double CLAW_MIN = 0.0;
-    public final static double CLAW_MAX = 0.5;
-    public final static double CLAW_SPEED = 0.00;
+    private Servo claw;
+    private DcMotorEx linearSlideMotor;
+
+    private double CLAW_HOME = 0.7;
+    private double CLAW_MIM = 0.0;
+    private double CLAW_MAX = 0.8;
 
 
     @Override
     public void runOpMode() {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-
-        // Initialize the hardware variables. Note that the strings used here must correspond
-        // to the names assigned during the robot configuration step on the DS or RC devices.
-
         leftFrontDrive  = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftBackDrive  = hardwareMap.get(DcMotorEx.class, "leftRear");
         rightFrontDrive = hardwareMap.get(DcMotorEx.class, "rightFront");
         rightBackDrive = hardwareMap.get(DcMotorEx.class, "rightRear");
-        claw = hardwareMap.get(Servo.class, "claw");
-        // claw = hardwareMap.servo.get("claw");
-        // claw = hardwareMap.get(Servo.class, "claw");
-        // claw.setPosition(0);
-        double clawPosition = claw.getPosition();
-        
 
+        linearSlideMotor = hardwareMap.get(DcMotorEx.class, "linearSlide");
+        linearSlideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linearSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        // ########################################################################################
-        // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
-        // ########################################################################################
-        // Most robots need the motors on one side to be reversed to drive forward.
-        // The motor reversals shown here are for a "direct drive" robot (the wheels turn the same direction as the motor shaft)
-        // If your robot has additional gear reductions or uses a right-angled drive, it's important to ensure
-        // that your motors are turning in the correct direction.  So, start out with the reversals here, BUT
-        // when you first test your robot, push the left joystick forward and observe the direction the wheels turn.
-        // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
-        // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
+        claw = hardwareMap.servo.get("claw");
+//        claw.setDirection(Servo.Direction.REVERSE);
+        claw.setPosition(CLAW_HOME);
 
-        // leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        // leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        // rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        // rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        double clawPos = CLAW_HOME;
+        double clawSpeed = 0.03;
 
-        // Wait for the game to start (driver presses PLAY)
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
 
         waitForStart();
         runtime.reset();
@@ -106,31 +94,23 @@ public class TeleOpMVP1 extends LinearOpMode {
             double max;
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial   = -gamepad1.left_stick_y;  // forward, back
-            double lateral = -gamepad1.right_stick_x; // turning
+            double lateral = gamepad1.right_stick_x; // turning
             double yaw     =  gamepad1.left_stick_x; // side to side
 
 
-            if(gamepad1.a) {
-//                clawPosition = Range.clip(clawPosition, CLAW_MIN, CLAW_MAX);
-//                claw.setPosition(clawPosition);
-//
-//                telemetry.addData("claw", "%.2f", clawPosition);
-//                telemetry.addData("left", "%.2f", left);
-//                telemetry.addData("right", "%.2f", right);
-//                telemetry.update();
-//                clawPosition = Range.clip(clawPosition, CLAW_MIN, CLAW_MAX);
-                clawPosition = claw.getPosition();
-                telemetry.addData("claw", "%.2f", clawPosition);
-                telemetry.update();
-                claw.setPosition(1.0);
+            if(gamepad1.a) clawPos -= clawSpeed;
+            else if(gamepad1.b) clawPos += clawSpeed;
+
+            if(gamepad1.right_trigger == 1.0) {
+                TrajectorySequence ts = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
+                        .turn(Math.toRadians(90)) // Turns 45 degrees counter-clockwise
+                        .build();
+
+                drive.followTrajectorySequence(ts);
             }
-            if(gamepad1.b) {
-//                clawPosition = Range.clip(clawPosition, CLAW_MAX, CLAW_MIN);
-                claw.setPosition(0.5);
-            }
-//            clawPosition = claw.getPosition();
-//            telemetry.addData("claw", "%.2f", clawPosition);
-//            telemetry.update();
+
+            clawPos = Range.clip(clawPos, CLAW_MIM, CLAW_MAX);
+            claw.setPosition(clawPos);
 
             double axialCoefficient = 0.5;
             double yawCoefficient = 0.5;
@@ -141,7 +121,7 @@ public class TeleOpMVP1 extends LinearOpMode {
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
-            double powerModifier = 0.5; // halving the power -- less speed?
+            double powerModifier = 0.4; // halving the power -- less speed?
             double leftFrontPower  = (axial + lateral + yaw) * powerModifier;
             double rightFrontPower = (axial - lateral - yaw) * powerModifier;
             double leftBackPower   = (axial - lateral + yaw) * powerModifier;
@@ -160,28 +140,21 @@ public class TeleOpMVP1 extends LinearOpMode {
                 rightBackPower  /= max;
             }
 
-            // This is test code:
-            //
-            // Uncomment the following code to test your motor directions.
-            // Each button should make the corresponding motor run FORWARD.
-            //   1) First get all the motors to take to correct positions on the robot
-            //      by adjusting your Robot Configuration if necessary.
-            //   2) Then make sure they run in the correct direction by modifying the
-            //      the setDirection() calls above.
-            // Once the correct motors move in the correct direction re-comment this code.
-
-            /*
-            leftFrontPower  = gamepad1.x ? 1.0 : 0.0;  // X gamepad
-            leftBackPower   = gamepad1.a ? 1.0 : 0.0;  // A gamepad
-            rightFrontPower = gamepad1.y ? 1.0 : 0.0;  // Y gamepad
-            rightBackPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
-            */
-
             // Send calculated power to wheels
             leftFrontDrive.setPower(leftFrontPower);
             rightFrontDrive.setPower(rightFrontPower);
             leftBackDrive.setPower(leftBackPower);
             rightBackDrive.setPower(rightBackPower);
+
+            double linearPowerModifier = 1.5;
+            double linearAxial = gamepad2.left_stick_y;
+//            double yaw     =  gamepad1.left_stick_x; // side to side
+            linearAxial = linearAxial * 0.5;
+//            yaw = yaw * 0.5;
+
+            double linearPower = linearAxial * linearPowerModifier;
+
+            linearSlideMotor.setPower(linearPower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
