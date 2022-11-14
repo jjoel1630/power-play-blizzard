@@ -59,9 +59,9 @@ public class TeleOpFiveCone extends LinearOpMode {
     private Servo claw;
     private DcMotorEx linearSlideMotor;
 
-    private double CLAW_HOME = 0.7;
+    private double CLAW_HOME = 0.0;
     private double CLAW_MIM = 0.0;
-    private double CLAW_MAX = 0.8;
+    private double CLAW_MAX = 0.6;
 
 
     @Override
@@ -73,7 +73,7 @@ public class TeleOpFiveCone extends LinearOpMode {
         rightBackDrive = hardwareMap.get(DcMotorEx.class, "rightRear");
 
         linearSlideMotor = hardwareMap.get(DcMotorEx.class, "linearSlide");
-        linearSlideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+//        linearSlideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linearSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -98,30 +98,36 @@ public class TeleOpFiveCone extends LinearOpMode {
             double yaw     =  gamepad1.left_stick_x; // side to side
 
 
-            if(gamepad1.a) clawPos -= clawSpeed;
-            else if(gamepad1.b) clawPos += clawSpeed;
+            if(gamepad2.right_trigger == 1.0) clawPos -= clawSpeed;
+            else if(gamepad2.left_trigger == 1.0) clawPos += clawSpeed;
 
-            if(gamepad1.right_trigger == 1.0) {
-                TrajectorySequence ts = drive.trajectorySequenceBuilder(new Pose2d(0, 0, 0))
-                        .turn(Math.toRadians(90)) // Turns 45 degrees counter-clockwise
-                        .build();
-
-                drive.followTrajectorySequence(ts);
+            if(gamepad2.y) {
+                if(linearSlideMotor.getCurrentPosition() >= -1 && linearSlideMotor.getCurrentPosition() <= 1) linearSlideMotor.setPower(100);
             }
+
+            if(gamepad2.left_trigger == 1.0) {
+                linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
+//            if(gamepad2.right_trigger == 1.0 && clawPos)
+
+//            if(gamepad1.right_trigger == 1.0) {
+//
+//            }
 
             clawPos = Range.clip(clawPos, CLAW_MIM, CLAW_MAX);
             claw.setPosition(clawPos);
 
-            double axialCoefficient = 0.5;
-            double yawCoefficient = 0.5;
-            double lateralCoefficient = 0.4;
+            double axialCoefficient = 0.43;
+            double yawCoefficient = 0.9;
+            double lateralCoefficient = 0.43;
             yaw = yaw * yawCoefficient;
             axial = axial * axialCoefficient;
             lateral = lateral * lateralCoefficient;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
-            double powerModifier = 0.4; // halving the power -- less speed?
+            double powerModifier = 0.6; // halving the power -- less speed?
             double leftFrontPower  = (axial + lateral + yaw) * powerModifier;
             double rightFrontPower = (axial - lateral - yaw) * powerModifier;
             double leftBackPower   = (axial - lateral + yaw) * powerModifier;
@@ -146,11 +152,11 @@ public class TeleOpFiveCone extends LinearOpMode {
             leftBackDrive.setPower(leftBackPower);
             rightBackDrive.setPower(rightBackPower);
 
+//            leftFrontDrive.getCurrentPosition();
+
             double linearPowerModifier = 1.5;
             double linearAxial = gamepad2.left_stick_y;
-//            double yaw     =  gamepad1.left_stick_x; // side to side
             linearAxial = linearAxial * 0.5;
-//            yaw = yaw * 0.5;
 
             double linearPower = linearAxial * linearPowerModifier;
 
@@ -158,8 +164,8 @@ public class TeleOpFiveCone extends LinearOpMode {
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
-            telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
+//            telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
+            telemetry.addLine("linear: " + linearSlideMotor.getCurrentPosition());
             telemetry.update();
         }
     }}
