@@ -59,9 +59,9 @@ public class TeleOpFiveCone extends LinearOpMode {
     private Servo claw;
     private DcMotorEx linearSlideMotor;
 
-    private double CLAW_HOME = 0.0;
     private double CLAW_MIM = 0.0;
-    private double CLAW_MAX = 0.6;
+    private double CLAW_MAX = 0.7;
+    private double CLAW_HOME = CLAW_MAX;
 
 
     @Override
@@ -73,17 +73,16 @@ public class TeleOpFiveCone extends LinearOpMode {
         rightBackDrive = hardwareMap.get(DcMotorEx.class, "rightRear");
 
         linearSlideMotor = hardwareMap.get(DcMotorEx.class, "linearSlide");
-//        linearSlideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linearSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         claw = hardwareMap.servo.get("claw");
-//        claw.setDirection(Servo.Direction.REVERSE);
-        claw.setPosition(CLAW_HOME);
+        claw.setDirection(Servo.Direction.REVERSE);
+//        claw.setPosition(CLAW_HOME);
 
         double clawPos = CLAW_HOME;
-        double clawSpeed = 0.03;
+        double clawSpeed = 0.08;
 
 
         waitForStart();
@@ -91,36 +90,33 @@ public class TeleOpFiveCone extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+
+
             double max;
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial   = -gamepad1.left_stick_y;  // forward, back
             double lateral = gamepad1.right_stick_x; // turning
             double yaw     =  gamepad1.left_stick_x; // side to side
 
-
-            if(gamepad2.right_trigger == 1.0) clawPos -= clawSpeed;
-            else if(gamepad2.left_trigger == 1.0) clawPos += clawSpeed;
-
-            if(gamepad2.y) {
-                if(linearSlideMotor.getCurrentPosition() >= -1 && linearSlideMotor.getCurrentPosition() <= 1) linearSlideMotor.setPower(100);
-            }
-
-            if(gamepad2.left_trigger == 1.0) {
+            if(gamepad2.left_bumper) {
                 linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
-//            if(gamepad2.right_trigger == 1.0 && clawPos)
 
-//            if(gamepad1.right_trigger == 1.0) {
-//
+//            if(gamepad2.y) {
+//                if(linearSlideMotor.getCurrentPosition() >= -1 && linearSlideMotor.getCurrentPosition() <= 1) linearSlideMotor.setPower(100);
 //            }
+
+            if(gamepad2.b) claw.setPosition(CLAW_HOME);
+            if(gamepad2.right_trigger == 1.0) clawPos -= clawSpeed;
+            else if(gamepad2.left_trigger == 1.0) clawPos += clawSpeed;
 
             clawPos = Range.clip(clawPos, CLAW_MIM, CLAW_MAX);
             claw.setPosition(clawPos);
 
-            double axialCoefficient = 0.43;
+            double axialCoefficient = 0.53;
             double yawCoefficient = 0.9;
-            double lateralCoefficient = 0.43;
+            double lateralCoefficient = 0.53;
             yaw = yaw * yawCoefficient;
             axial = axial * axialCoefficient;
             lateral = lateral * lateralCoefficient;
@@ -152,8 +148,6 @@ public class TeleOpFiveCone extends LinearOpMode {
             leftBackDrive.setPower(leftBackPower);
             rightBackDrive.setPower(rightBackPower);
 
-//            leftFrontDrive.getCurrentPosition();
-
             double linearPowerModifier = 1.5;
             double linearAxial = gamepad2.left_stick_y;
             linearAxial = linearAxial * 0.5;
@@ -164,7 +158,6 @@ public class TeleOpFiveCone extends LinearOpMode {
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-//            telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addLine("linear: " + linearSlideMotor.getCurrentPosition());
             telemetry.update();
         }
