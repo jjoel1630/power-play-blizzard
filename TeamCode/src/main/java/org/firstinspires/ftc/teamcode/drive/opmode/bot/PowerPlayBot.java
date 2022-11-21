@@ -53,21 +53,25 @@ public class PowerPlayBot implements BotBase {
             if (leftFront != null) {
                 leftFront.setDirection(DcMotor.Direction.FORWARD);
                 leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
 
             if (leftRear != null) {
                 leftRear.setDirection(DcMotor.Direction.FORWARD);
                 leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
 
             if (rightFront != null) {
                 rightFront.setDirection(DcMotor.Direction.FORWARD);
                 rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
 
             if (rightRear != null) {
                 rightRear.setDirection(DcMotor.Direction.FORWARD);
                 rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
 
             quitBot();
