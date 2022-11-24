@@ -14,17 +14,23 @@ public class SleeveColorDetection extends OpenCvPipeline {
     // 0 for left, 1 for center, 2 for right
     private int position = 0;
 
+    private static Point SLEEVE_TOPLEFT_ANCHOR_POINT = new Point(145, 168);
+
+    // Width and height for the bounding box
+    public static int REGION_WIDTH = 30;
+    public static int REGION_HEIGHT = 50;
+
     private final Scalar
             YELLOW  = new Scalar(255, 255, 0),
             CYAN    = new Scalar(0, 255, 255),
             MAGENTA = new Scalar(255, 0, 255);
 
     Point sleeve_pointA = new Point(
-            5,
-            5);
+            SLEEVE_TOPLEFT_ANCHOR_POINT.x,
+            SLEEVE_TOPLEFT_ANCHOR_POINT.y);
     Point sleeve_pointB = new Point(
-            5 + 5,
-            5 + 5);
+            SLEEVE_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
+            SLEEVE_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
 
     @Override
     public Mat processFrame(Mat input) {
