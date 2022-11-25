@@ -10,16 +10,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 import android.util.Log;
 
 import java.util.ArrayList;
 
-public class PowerPlayBot implements BotBase {
-    private DcMotorEx leftFront = null;
-    private DcMotorEx leftRear = null;
-    private DcMotorEx rightFront = null;
-    private DcMotorEx rightRear = null;
+public class PowerPlayBot {
+    public DcMotorEx leftFront = null;
+    public DcMotorEx leftRear = null;
+    public DcMotorEx rightFront = null;
+    public DcMotorEx rightRear = null;
 
     private HardwareMap hwMap = null;
     private Telemetry telemetry;
