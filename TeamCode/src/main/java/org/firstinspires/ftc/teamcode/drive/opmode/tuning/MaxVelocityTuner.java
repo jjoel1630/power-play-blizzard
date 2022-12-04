@@ -39,6 +39,8 @@ public class MaxVelocityTuner extends LinearOpMode {
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        double lf = 0, rf = 0, lr = 0, rr = 0;
+
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -63,6 +65,10 @@ public class MaxVelocityTuner extends LinearOpMode {
             Pose2d poseVelo = Objects.requireNonNull(drive.getPoseVelocity(), "poseVelocity() must not be null. Ensure that the getWheelVelocities() method has been overridden in your localizer.");
 
             maxVelocity = Math.max(poseVelo.vec().norm(), maxVelocity);
+            lf = Math.max(drive.leftFront.getVelocity(), lf);
+            rf = Math.max(drive.rightFront.getVelocity(), rf);
+            lr = Math.max(drive.leftRear.getVelocity(), lr);
+            rr = Math.max(drive.rightRear.getVelocity(), rr);
         }
 
         drive.setDrivePower(new Pose2d());
@@ -71,6 +77,14 @@ public class MaxVelocityTuner extends LinearOpMode {
 
         telemetry.addData("Max Velocity", maxVelocity);
         telemetry.addData("Voltage Compensated kF", effectiveKf * batteryVoltageSensor.getVoltage() / 12);
+        telemetry.addData("leftFront", drive.leftFront.getVelocity());
+        telemetry.addData("lf max:", lf);
+        telemetry.addData("leftRear", drive.leftRear.getVelocity());
+        telemetry.addData("lr max:", lr);
+        telemetry.addData("rightFront", drive.rightFront.getVelocity());
+        telemetry.addData("rf max:", rf);
+        telemetry.addData("rightRear", drive.rightRear.getVelocity());
+        telemetry.addData("rr max:", rr);
         telemetry.update();
 
         while (!isStopRequested() && opModeIsActive()) idle();

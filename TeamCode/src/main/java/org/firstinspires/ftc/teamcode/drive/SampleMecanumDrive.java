@@ -70,7 +70,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private TrajectoryFollower follower;
 
-    private DcMotorEx leftFront, leftRear, rightRear, rightFront;
+    public DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private Servo claw;
     private List<DcMotorEx> motors;
 
@@ -130,8 +130,8 @@ public class SampleMecanumDrive extends MecanumDrive {
         // left front = 0
         // left rear = 2
 
-        rightFront.setDirection(DcMotorEx.Direction.REVERSE);
-        leftRear.setDirection(DcMotorEx.Direction.REVERSE);
+        rightRear.setDirection(DcMotorEx.Direction.REVERSE);
+        leftFront.setDirection(DcMotorEx.Direction.REVERSE);
 //        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
@@ -247,6 +247,10 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
     }
 
+//    lf --> 2440, 2500, 2480, 2500, 2520, 2500
+//    lr --> 2480, 2560, 2580, 2560, 2600, 2580
+//    rf --> 2500, 2540, 2540, 2520, 2540, 2520
+//    rr --> 2460, 2460, 2480, 2460, 2460, 2460
     public void setPIDFCoefficients(DcMotor.RunMode runMode, PIDFCoefficients coefficients) {
         PIDFCoefficients compensatedCoefficients = new PIDFCoefficients(
                 coefficients.p, coefficients.i, coefficients.d,

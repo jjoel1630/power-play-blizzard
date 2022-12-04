@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.bot;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -35,11 +36,11 @@ public class PowerPlayBot {
     public static String RIGHT_REAR = "rightRear";
 
     // Constants:
-    public double circumference = 0;
     public static final double TICKS_PER_REV = 384.5;
     public static final double MAX_RPM = 435;
     public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0.7, 0, 5, 13);
     public static double WHEEL_RADIUS = 1.9685; // in
+    public double circumference = WHEEL_RADIUS * 2 * Math.PI;
     public static double GEAR_RATIO = 1.223047;
     public static double TRACK_WIDTH = 14; // in
     public static double kV = 1.0 / (MAX_RPM * GEAR_RATIO * 2 * Math.PI * WHEEL_RADIUS / 60.0);
@@ -51,6 +52,8 @@ public class PowerPlayBot {
     public static double MAX_ANG_ACCEL = Math.toRadians(311.93694642857145);
 
     private int encoderDirection = 1;
+
+    private BNO055IMU imu;
 
     public PowerPlayBot() {};
 
@@ -71,28 +74,33 @@ public class PowerPlayBot {
 
             // Make sure no motors are null, and then set the direction + mode of each motor
             if (leftFront != null) {
-                leftFront.setDirection(DcMotor.Direction.FORWARD);
+                leftFront.setDirection(DcMotor.Direction.REVERSE);
                 leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
 
             if (leftRear != null) {
-                leftRear.setDirection(DcMotor.Direction.REVERSE);
+                leftRear.setDirection(DcMotor.Direction.FORWARD);
                 leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
 
             if (rightFront != null) {
-                rightFront.setDirection(DcMotor.Direction.REVERSE);
+                rightFront.setDirection(DcMotor.Direction.FORWARD);
                 rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
 
             if (rightRear != null) {
-                rightRear.setDirection(DcMotor.Direction.FORWARD);
+                rightRear.setDirection(DcMotor.Direction.REVERSE);
                 rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
+
+            imu = hw.get(BNO055IMU.class, "imu");
+            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+            parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+            imu.initialize(parameters);
 
             quitBot();
         } catch (Exception ex) {
@@ -118,10 +126,10 @@ public class PowerPlayBot {
     }
 
     public void runToPositionMode() {
-        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFront.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        leftRear.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        rightRear.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
     }
 
     public void resetEncoder() {
@@ -129,6 +137,13 @@ public class PowerPlayBot {
         leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    public void runWOEncoder() {
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public double getVelocity(String name) {
@@ -156,6 +171,18 @@ public class PowerPlayBot {
             rightFront.setVelocity(0.01*power*1);
             leftRear.setVelocity(0.01*power*1);
             rightRear.setVelocity(0.01*power*1);
+        }
+    }
+
+    public void moveOnVelo(double velo) {
+        if (checkMotorTrue()) {
+//            double rightPower = Range.clip(power, -1.0, 1.0);
+//            double leftPower = Range.clip(power, -1.0, 1.0);
+
+            leftFront.setVelocity(velo);
+            rightFront.setVelocity(velo);
+            leftRear.setVelocity(velo);
+            rightRear.setVelocity(velo);
         }
     }
 
@@ -192,7 +219,11 @@ public class PowerPlayBot {
         runToPositionMode();
 
         while(isBusy()) {
-            telemetry.addLine("driving " + dist + " inches");
+            telemetry.addLine("driving " + encoderDist + " inches");
+            telemetry.addLine("rightFront " + rightFront.getCurrentPosition() + " inches");
+            telemetry.addLine("rightRear " + rightRear.getCurrentPosition() + " inches");
+            telemetry.addLine("leftFront " + leftFront.getCurrentPosition() + " inches");
+            telemetry.addLine("leftRear " + leftRear.getCurrentPosition() + " inches");
             telemetry.update();
         }
 
@@ -207,6 +238,9 @@ public class PowerPlayBot {
         return (leftFront.isBusy() || rightFront.isBusy() || leftRear.isBusy() || rightRear.isBusy());
     }
 
+    public double encoderTicksToInches(double ticks) {
+        return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
+    }
 
     public boolean checkMotorTrue() {
         return (leftFront != null && leftRear != null && rightFront != null && rightRear != null);
