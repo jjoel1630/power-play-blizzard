@@ -97,6 +97,32 @@ public class PowerPlayBot {
                 rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             }
 
+            double rfF = 32767 / 2260;
+            double rfP = 0.1 * rfF;
+            double rfI = 0.1 * rfP;
+
+            double rrF = 32767 / 2160;
+            double rrP = 0.1 * rrF;
+            double rrI = 0.1 * rrP;
+
+            double lfF = 32767 / 2260;
+            double lfP = 0.1 * lfF;
+            double lfI = 0.1 * lfP;
+
+            double lrF = 32767 / 2300;
+            double lrP = 0.1 * lrF;
+            double lrI = 0.1 * lrP;
+
+//            rightFront.setVelocityPIDFCoefficients(rfP, rfI, 0, rfF);
+//            rightRear.setVelocityPIDFCoefficients(rrP, rrI, 0, rrF);
+//            leftFront.setVelocityPIDFCoefficients(lfP, lfI, 0, lfF);
+//            leftRear.setVelocityPIDFCoefficients(lrP, lrI, 0, lrF);
+//
+//            rightFront.setPositionPIDFCoefficients(5.0);
+//            rightRear.setPositionPIDFCoefficients(5.0);
+//            leftFront.setPositionPIDFCoefficients(5.0);
+//            leftRear.setPositionPIDFCoefficients(5.0);
+
             imu = hw.get(BNO055IMU.class, "imu");
             BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
             parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
@@ -209,21 +235,21 @@ public class PowerPlayBot {
         rightRear.setTargetPosition(pos);
     }
 
-    public void moveToPosition(double dist) {
+    public void moveToPosition(double dist, double power) {
         resetEncoder();
         double rotationsNeeded = dist / circumference;
         int encoderDist = (int)(rotationsNeeded * TICKS_PER_REV);
 
         setMotorTargetPos(encoderDist);
-        moveOnPower(0.5);
+        moveOnPower(power);
         runToPositionMode();
 
         while(isBusy()) {
             telemetry.addLine("driving " + encoderDist + " inches");
-            telemetry.addLine("rightFront " + rightFront.getCurrentPosition() + " inches");
-            telemetry.addLine("rightRear " + rightRear.getCurrentPosition() + " inches");
-            telemetry.addLine("leftFront " + leftFront.getCurrentPosition() + " inches");
-            telemetry.addLine("leftRear " + leftRear.getCurrentPosition() + " inches");
+            telemetry.addLine("rightFront " + rightFront.getCurrentPosition() + " ticks");
+            telemetry.addLine("rightRear " + rightRear.getCurrentPosition() + " ticks");
+            telemetry.addLine("leftFront " + leftFront.getCurrentPosition() + " ticks");
+            telemetry.addLine("leftRear " + leftRear.getCurrentPosition() + " ticks");
             telemetry.update();
         }
 

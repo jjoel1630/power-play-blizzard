@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.drive.opmode.autonomous;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.robocol.Command;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -29,10 +30,14 @@ public class AutonomousMove extends LinearOpMode {
     public int POSITION = 1;
     public static double TIME = 1.1;
     public static double POWER = 0.001;
-    public static double DISTANCE = 10;
+    public static double DISTANCE = 40;
 
     SleeveColorDetection sleeveDetection;
     OpenCvCamera camera;
+
+    public static double KP = 0.0;
+    public static double KI = 0.0;
+    public static double KD = 0.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -59,30 +64,37 @@ public class AutonomousMove extends LinearOpMode {
 
         timer = new ElapsedTime();
 
+//        PIDController controller = new PIDController(1.45, 0.145, 0.0, 14.5, timer);        PIDController controller = new PIDController(1.45, 0.145, 0.0, 14.5, timer);
+        PIDController controller = new PIDController(KP, KI, KD, 14.5, timer);
+//        telemetry.addLine("in loop: " + curDistance + " inches");
+//        telemetry.update();
+
+        robot.resetEncoder();
+        robot.runWOEncoder();
+
+        boolean t = false;
+
+//        double distance = 0;
         while (!isStopRequested()) {
-            robot.resetEncoder();
-            robot.runWOEncoder();
 
-            double curDistance = 0;
+//            if (DISTANCE <= robot.rightFront.getCurrentPosition() || t == true) {
+//                robot.quitBot();
+//                t = true;
+//                break;
+//            }
 
-            while (curDistance < DISTANCE && !isStopRequested()) {
-                curDistance = robot.encoderTicksToInches(robot.rightFront.getCurrentPosition());
+            double power = controller.update(DISTANCE, robot.rightFront.getCurrentPosition(), timer.seconds());
+            timer.reset();
 
-                robot.moveOnVelo(POWER);
-                telemetry.addLine("in loop: " + curDistance + " inches");
-                telemetry.update();
+            telemetry.addLine("power: " + power);
+            telemetry.addLine("error: " + command + " command");
+
+            telemetry.update();
+
+            if(!t) {
+                robot.moveOnPower(power);
             }
-            robot.quitBot();
-            double time = timer.seconds();
-            while(timer.seconds() - time < 1) {}
-
-            time = timer.seconds();
-
-            while(timer.seconds() - time < TIME) {
-                robot.strafeRight(0.2);
-            }
-            robot.quitBot();
-            break;
+//            break;
         }
     }
 }
