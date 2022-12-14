@@ -12,13 +12,13 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 public class SleeveColorDetection extends OpenCvPipeline {
     // 0 for left, 1 for center, 2 for right
-    private int position = 0;
+    private int position = 1;
 
-    private static Point SLEEVE_TOPLEFT_ANCHOR_POINT = new Point(145, 168);
+    private static Point SLEEVE_TOPLEFT_ANCHOR_POINT = new Point(150, 80);
 
     // Width and height for the bounding box
     public static int REGION_WIDTH = 30;
-    public static int REGION_HEIGHT = 50;
+    public static int REGION_HEIGHT = 40;
 
     private final Scalar
             YELLOW  = new Scalar(255, 255, 0),
@@ -45,7 +45,7 @@ public class SleeveColorDetection extends OpenCvPipeline {
                     input,
                     sleeve_pointA,
                     sleeve_pointB,
-                    CYAN,
+                    YELLOW,
                     2
             );
         } else if (sumColors.val[1] == minColor) {

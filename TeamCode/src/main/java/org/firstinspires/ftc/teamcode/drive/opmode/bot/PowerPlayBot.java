@@ -228,6 +228,13 @@ public class PowerPlayBot {
         rightRear.setPower(power);
     }
 
+    public void strafeLeft(double power) {
+        leftFront.setPower(power);
+        rightFront.setPower(-power);
+        leftRear.setPower(power);
+        rightRear.setPower(-power);
+    }
+
     public void setMotorTargetPos(int pos) {
         leftFront.setTargetPosition(pos);
         rightFront.setTargetPosition(pos);

@@ -19,15 +19,17 @@ public class PIDController {
         this.timer = timer;
     }
 
-    public double[] update(double target, double state, double time) {
+    public double[] update(double target, double state) {
         double err = target - state;
-        integralSum += err * time;
-        double derivative = (err - lastError) / time;
+        integralSum += err * timer.seconds();
+        double derivative = (err - lastError) / timer.seconds();
         lastError = err;
 
         double[] out = new double[3];
 
         double output = (err * Kp) + (derivative * Kd) + (integralSum * Ki);
+
+        timer.reset();
 
         out[0] = output;
         out[1] = err;

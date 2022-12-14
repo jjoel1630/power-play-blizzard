@@ -27,74 +27,100 @@ public class AutonomousMove extends LinearOpMode {
 
     String webcamName = "Webcam 1";
 
-    public int POSITION = 1;
-    public static double TIME = 1.1;
-    public static double POWER = 0.001;
-    public static double DISTANCE = 40;
+    public static int POSITION = 1;
+    public double TIME = 1.1;
+    public double POWER = 0.001;
+    public double DISTANCE = 40;
 
     SleeveColorDetection sleeveDetection;
     OpenCvCamera camera;
 
-    public static double KP = 0.0;
-    public static double KI = 0.0;
-    public static double KD = 0.0;
+    PIDController controller;
+    public double KP = 0.0;
+    public double KI = 0.0;
+    public double KD = 0.0;
+
+    public static double straightPower = 0.3;
+    public static double strafePower = 0.3;
+    public static double straightTime = 1.1;
+    public static double strafeTime = 1.5;
+    public static double pauseTime = 0.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot.init(this, hardwareMap, telemetry);
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, webcamName), cameraMonitorViewId);
+        sleeveDetection = new SleeveColorDetection();
+        camera.setPipeline(sleeveDetection);
 
-//        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-//        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, webcamName), cameraMonitorViewId);
-//        sleeveDetection = new SleeveColorDetection();
-//        camera.setPipeline(sleeveDetection);
-//
-//        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-//        {
-//            @Override
-//            public void onOpened()
-//            {
-//                camera.startStreaming(320,240, OpenCvCameraRotation.SIDEWAYS_LEFT);
-//            }
-//
-//            @Override
-//            public void onError(int errorCode) {}
-//        });
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                camera.startStreaming(320,240, OpenCvCameraRotation.SIDEWAYS_LEFT);
+            }
+
+            @Override
+            public void onError(int errorCode) {}
+        });
+
+        while (!isStarted()) {
+            telemetry.addData("ROTATION: ", sleeveDetection.getParkPosition());
+            telemetry.update();
+
+            POSITION = sleeveDetection.getParkPosition();
+        }
+
+        robot.init(this, hardwareMap, telemetry);
 
         waitForStart();
 
         timer = new ElapsedTime();
-
-//        PIDController controller = new PIDController(1.45, 0.145, 0.0, 14.5, timer);        PIDController controller = new PIDController(1.45, 0.145, 0.0, 14.5, timer);
-        PIDController controller = new PIDController(KP, KI, KD, 14.5, timer);
-//        telemetry.addLine("in loop: " + curDistance + " inches");
-//        telemetry.update();
+//        controller = new PIDController(KP, KI, KD, 14.5, timer);
 
         robot.resetEncoder();
         robot.runWOEncoder();
 
-        boolean t = false;
-
-//        double distance = 0;
         while (!isStopRequested()) {
-
-//            if (DISTANCE <= robot.rightFront.getCurrentPosition() || t == true) {
-//                robot.quitBot();
-//                t = true;
-//                break;
-//            }
-
-            double power = controller.update(DISTANCE, robot.rightFront.getCurrentPosition(), timer.seconds());
-            timer.reset();
-
-            telemetry.addLine("power: " + power);
-            telemetry.addLine("error: " + command + " command");
-
+            telemetry.addLine("Camera color: " + POSITION);
             telemetry.update();
 
-            if(!t) {
-                robot.moveOnPower(power);
+//            straightPower = 0.3;
+//            double strafePower = 0.3;
+//            double straightTime = 1.0;
+//            double strafeTime = 1.8;
+//            double pauseTime = 1.0;
+
+            if(POSITION == 1) {
+                timer.reset();
+                while(timer.seconds() <= straightTime)
+                    robot.moveOnPower(straightPower);
+            } else if(POSITION == 2) {
+                timer.reset();
+                while(timer.seconds() <= straightTime)
+                    robot.moveOnPower(straightPower);
+
+                timer.reset();
+                while(timer.seconds() <= pauseTime) {}
+
+                timer.reset();
+                while(timer.seconds() <= strafeTime)
+                    robot.strafeRight(strafePower);
+            } else {
+                timer.reset();
+                while(timer.seconds() <= straightTime)
+                    robot.moveOnPower(straightPower);
+
+                timer.reset();
+                while(timer.seconds() <= pauseTime) {}
+
+                timer.reset();
+                while(timer.seconds() <= strafeTime)
+                    robot.strafeLeft(strafePower);
             }
-//            break;
+
+            break;
         }
     }
 }

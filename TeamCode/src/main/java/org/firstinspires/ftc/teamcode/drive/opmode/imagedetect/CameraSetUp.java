@@ -42,7 +42,7 @@ public class CameraSetUp extends LinearOpMode {
             @Override
             public void onOpened()
             {
-                camera.startStreaming(320,240, OpenCvCameraRotation.SIDEWAYS_LEFT);
+                camera.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -52,12 +52,12 @@ public class CameraSetUp extends LinearOpMode {
         robot = new PowerPlayBot();
         timer = new ElapsedTime();
 
-//        while (!isStarted()) {
-        telemetry.addData("ROTATION: ", sleeveDetection.getParkPosition());
-        telemetry.update();
+        while (!isStarted()) {
+            telemetry.addData("ROTATION: ", sleeveDetection.getParkPosition());
+            telemetry.update();
 
-        POSITION = sleeveDetection.getParkPosition();
-//        }
+            POSITION = sleeveDetection.getParkPosition();
+        }
 
 
         robot.init(this, hardwareMap, telemetry);
@@ -65,7 +65,7 @@ public class CameraSetUp extends LinearOpMode {
         waitForStart();
 
         while(!isStopRequested()) {
-            telemetry.addData("position: ", robot.getPosition());
+            telemetry.addData("position: ", POSITION);
             telemetry.update();
 
             break;
