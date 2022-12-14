@@ -20,6 +20,8 @@ public class MoveLinearSlide extends LinearOpMode {
     public static double KI = 0.0;
     public static double KD = 0.0;
 
+    public static int numTimes = 15;
+
     private ElapsedTime timer;
 
     @Override
@@ -62,15 +64,16 @@ public class MoveLinearSlide extends LinearOpMode {
 //            telemetry.addLine("error: " + pwr[1]);
 //
 //            telemetry.update();
-            while(slide.getCurrentPosition() <= 2260) {
-                slide.setPower(0.7);
-                telemetry.addLine("position: " + slide.getCurrentPosition());
-                telemetry.update();
-            }
+            for (int i = 0; i <= numTimes; ++i) {
+                while(slide.getCurrentPosition() <= 2260) {
+                    slide.setPower(0.7);
+                    telemetry.addLine("position: " + slide.getCurrentPosition());
+                    telemetry.update();
+                }
 
-            timer.reset();
-            while(timer.seconds() <= 2.0) {
-                slide.setPower(0.0);
+                while(slide.getCurrentPosition() >= 0) {
+                    slide.setPower(-0.7);
+                }
             }
         }
     }
