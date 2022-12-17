@@ -22,24 +22,16 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 @Config
 @Autonomous(name="Autonomous Move")
 public class AutonomousMove extends LinearOpMode {
+    /* ----------------------- TIMER, ROBOT, CAMERA INIT ----------------------- */
     PowerPlayBot robot = new PowerPlayBot();
     private ElapsedTime timer;
-
     String webcamName = "Webcam 1";
-
-    public static int POSITION = 1;
-    public double TIME = 1.1;
-    public double POWER = 0.001;
-    public double DISTANCE = 40;
-
     SleeveColorDetection sleeveDetection;
     OpenCvCamera camera;
 
-    PIDController controller;
-    public double KP = 0.0;
-    public double KI = 0.0;
-    public double KD = 0.0;
+    public int POSITION = 1;
 
+    /* ----------------------- POWER VALUES FOR CAMERA ----------------------- */
     public static double straightPower = 0.3;
     public static double strafePower = 0.3;
     public static double straightTime = 1.1;
@@ -48,6 +40,7 @@ public class AutonomousMove extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        /* ----------------------- CAMERA init ----------------------- */
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, webcamName), cameraMonitorViewId);
         sleeveDetection = new SleeveColorDetection();
@@ -65,6 +58,7 @@ public class AutonomousMove extends LinearOpMode {
             public void onError(int errorCode) {}
         });
 
+        /* ----------------------- GET POSITION ----------------------- */
         while (!isStarted()) {
             telemetry.addData("ROTATION: ", sleeveDetection.getParkPosition());
             telemetry.update();
@@ -72,26 +66,21 @@ public class AutonomousMove extends LinearOpMode {
             POSITION = sleeveDetection.getParkPosition();
         }
 
+        /* ----------------------- ROBO & TIMER INIT, WAIT FOR START ----------------------- */
         robot.init(this, hardwareMap, telemetry);
+        robot.resetEncoder();
+        robot.runWOEncoder();
 
         waitForStart();
 
         timer = new ElapsedTime();
-//        controller = new PIDController(KP, KI, KD, 14.5, timer);
 
-        robot.resetEncoder();
-        robot.runWOEncoder();
-
+        /* ----------------------- CONTROL LOOP ----------------------- */
         while (!isStopRequested()) {
             telemetry.addLine("Camera color: " + POSITION);
             telemetry.update();
 
-//            straightPower = 0.3;
-//            double strafePower = 0.3;
-//            double straightTime = 1.0;
-//            double strafeTime = 1.8;
-//            double pauseTime = 1.0;
-
+            /* ----------------------- DRIVE TO POSITION BASED ON NUMBER (0=LEFT, 1=STRAIGHT, 2=RIGHT) ----------------------- */
             if(POSITION == 1) {
                 timer.reset();
                 while(timer.seconds() <= straightTime)
@@ -100,10 +89,8 @@ public class AutonomousMove extends LinearOpMode {
                 timer.reset();
                 while(timer.seconds() <= straightTime)
                     robot.moveOnPower(straightPower);
-
                 timer.reset();
                 while(timer.seconds() <= pauseTime) {}
-
                 timer.reset();
                 while(timer.seconds() <= strafeTime)
                     robot.strafeRight(strafePower);
@@ -111,10 +98,8 @@ public class AutonomousMove extends LinearOpMode {
                 timer.reset();
                 while(timer.seconds() <= straightTime)
                     robot.moveOnPower(straightPower);
-
                 timer.reset();
                 while(timer.seconds() <= pauseTime) {}
-
                 timer.reset();
                 while(timer.seconds() <= strafeTime)
                     robot.strafeLeft(strafePower);

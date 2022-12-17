@@ -30,6 +30,7 @@ public class MoveLinearSlide extends LinearOpMode {
 
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        slide.setDirection(DcMotor.Direction.REVERSE);
         slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         PIDController controller = new PIDController(KP, KI, KD, 14.5, timer);
@@ -70,6 +71,9 @@ public class MoveLinearSlide extends LinearOpMode {
                     telemetry.addLine("position: " + slide.getCurrentPosition());
                     telemetry.update();
                 }
+
+                timer.reset();
+                while(timer.seconds() <= 1.5) {}
 
                 while(slide.getCurrentPosition() >= 0) {
                     slide.setPower(-0.7);

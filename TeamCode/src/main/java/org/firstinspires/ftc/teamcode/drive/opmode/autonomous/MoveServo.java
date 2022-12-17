@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 @Config
@@ -13,15 +14,23 @@ public class MoveServo extends LinearOpMode {
     public Servo claw;
 
     public static double CLAW_MIN = 0.0;
-    public static double CLAW_MAX = 0.7;
-    public static int openClose = 0;
-    public static double CLAW_HOME = CLAW_MAX;
-    public static double clawPos = CLAW_HOME;
-    public static double clawSpeed = 0.08;
+    public static double CLAW_MAX = 0.8;
+
+    public static int numTimes = 15;
+
+    private ElapsedTime timer;
+
+//    public static int openClose = 0;
+//    public static double clawPos = CLAW_HOME;
+//    public static double clawSpeed = 0.08;
 
     @Override
     public void runOpMode() throws InterruptedException {
         claw = hardwareMap.servo.get("claw");
+//        claw.setDirection(Servo.Direction.REVERSE);
+
+        double clawPos = CLAW_MAX;
+        double clawSpeed = 0.1;
 
         waitForStart();
 
@@ -32,8 +41,20 @@ public class MoveServo extends LinearOpMode {
 //            if(openClose == 0) clawPos = 0.0;
 //            if(openClose == 1) clawPos = 1.0;
 //
-//            clawPos = Range.clip(clawPos, CLAW_MIN, CLAW_MAX);
-            claw.setPosition(clawPos);
+            timer = new ElapsedTime();
+
+            int i = 0;
+            while(i < numTimes && opModeIsActive()) {
+                timer.reset();
+                while(timer.seconds() <= 1.5) {}
+
+//                clawPos = Range.clip(clawPos, CLAW_MIN, CLAW_MAX);
+                claw.setPosition(clawPos);
+
+                clawPos = clawPos == CLAW_MIN ? CLAW_MAX : CLAW_MIN;
+
+                ++i;
+            }
         }
     }
 }

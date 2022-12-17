@@ -45,7 +45,7 @@ public class SleeveColorDetection extends OpenCvPipeline {
                     input,
                     sleeve_pointA,
                     sleeve_pointB,
-                    YELLOW,
+                    CYAN,
                     2
             );
         } else if (sumColors.val[1] == minColor) {
