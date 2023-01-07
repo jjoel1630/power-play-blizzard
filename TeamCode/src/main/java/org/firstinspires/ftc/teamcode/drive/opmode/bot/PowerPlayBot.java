@@ -77,6 +77,7 @@ public class PowerPlayBot {
                 leftFront.setDirection(DcMotor.Direction.REVERSE);
                 leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                leftFront.setDirection(DcMotorEx.Direction.REVERSE);
             }
 
             if (leftRear != null) {
@@ -95,6 +96,7 @@ public class PowerPlayBot {
                 rightRear.setDirection(DcMotor.Direction.REVERSE);
                 rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                rightRear.setDirection(DcMotorEx.Direction.REVERSE);
             }
 
             double rfF = 32767 / 2260;
@@ -231,6 +233,20 @@ public class PowerPlayBot {
     public void strafeLeft(double power) {
         leftFront.setPower(power);
         rightFront.setPower(-power);
+        leftRear.setPower(power);
+        rightRear.setPower(-power);
+    }
+
+    public void turnRight(double power) {
+        leftFront.setPower(power);
+        rightFront.setPower(-power);
+        leftRear.setPower(-power);
+        rightRear.setPower(power);
+    }
+
+    public void turnLeft(double power) {
+        leftFront.setPower(-power);
+        rightFront.setPower(power);
         leftRear.setPower(power);
         rightRear.setPower(-power);
     }

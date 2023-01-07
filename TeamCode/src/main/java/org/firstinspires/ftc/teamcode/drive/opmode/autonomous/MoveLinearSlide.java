@@ -67,7 +67,7 @@ public class MoveLinearSlide extends LinearOpMode {
 //            telemetry.update();
             for (int i = 0; i <= numTimes; ++i) {
                 while(slide.getCurrentPosition() <= 2260) {
-                    slide.setPower(0.7);
+                    slide.setPower(1.0);
                     telemetry.addLine("position: " + slide.getCurrentPosition());
                     telemetry.update();
                 }
@@ -76,7 +76,7 @@ public class MoveLinearSlide extends LinearOpMode {
                 while(timer.seconds() <= 1.5) {}
 
                 while(slide.getCurrentPosition() >= 0) {
-                    slide.setPower(-0.7);
+                    slide.setPower(-1.0);
                 }
             }
         }

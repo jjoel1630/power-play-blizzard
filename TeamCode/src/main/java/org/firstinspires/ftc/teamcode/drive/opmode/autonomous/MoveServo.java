@@ -20,10 +20,6 @@ public class MoveServo extends LinearOpMode {
 
     private ElapsedTime timer;
 
-//    public static int openClose = 0;
-//    public static double clawPos = CLAW_HOME;
-//    public static double clawSpeed = 0.08;
-
     @Override
     public void runOpMode() throws InterruptedException {
         claw = hardwareMap.servo.get("claw");
