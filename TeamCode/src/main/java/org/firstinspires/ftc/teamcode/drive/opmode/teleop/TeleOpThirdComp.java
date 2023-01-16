@@ -12,7 +12,9 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name="TeleOp 3rd Comp", group="Linear OpMode")
 public class TeleOpThirdComp extends LinearOpMode {
     /* ---------------------- CONFIG VARS ---------------------- */
-    public static int CLAW_REV = 0;
+    public static int CLAWLEFT_REV = 0;
+    public static int CLAWRIGHT_REV = 0;
+    public static int CLAWB_REV = 0;
     public static int RBAR_REV = 0;
     public static int LBAR_REV = 0;
 
@@ -20,9 +22,12 @@ public class TeleOpThirdComp extends LinearOpMode {
     public static double LBAR_MAX = 1.0;
     public static double RBAR_MIN = 0.0;
     public static double LBAR_MIN = 0.0;
+    public static double CBAR_MIN = 0.0;
+    public static double CBAR_MAX = 1.0;
 
-    public static double rightBarPos = RBAR_MAX;
-    public static double leftBarPos = LBAR_MAX;
+    public double rightBarPos = RBAR_MAX;
+    public double leftBarPos = LBAR_MAX;
+    public double clawBarPos = leftBarPos;
 
     private DcMotorEx leftFrontDrive = null;
     private DcMotorEx leftBackDrive = null;
@@ -32,12 +37,16 @@ public class TeleOpThirdComp extends LinearOpMode {
     private DcMotorEx linearSlideRightMotor = null;
     private DcMotorEx linearSlideLeftMotor = null;
 
-    private Servo claw;
+    private Servo clawLeft;
+    private Servo clawRight;
     private Servo rightBar;
     private Servo leftBar;
+    private Servo clawBar;
 
-    private double CLAW_MIN= 0.0;
-    private double CLAW_MAX = 0.8;
+    public static double CLAWL_MIN= 0.85;
+    public static double CLAWL_MAX = 1.0;
+    public static double CLAWR_MIN= 0.0;
+    public static double CLAWR_MAX = 0.15;
 
     @Override
     public void runOpMode() {
@@ -62,22 +71,29 @@ public class TeleOpThirdComp extends LinearOpMode {
 
         boolean linearIsZero = false;
 
-        claw = hardwareMap.servo.get("claw");
+        clawLeft = hardwareMap.servo.get("clawLeft");
+        clawRight = hardwareMap.servo.get("clawRight");
         rightBar = hardwareMap.servo.get("rightBar");
         leftBar = hardwareMap.servo.get("leftBar");
+        clawBar = hardwareMap.servo.get("clawBar");
 
-        if(CLAW_REV == 1) claw.setDirection(Servo.Direction.REVERSE);
+        if(CLAWLEFT_REV == 1) clawLeft.setDirection(Servo.Direction.REVERSE);
+        if(CLAWRIGHT_REV == 1) clawRight.setDirection(Servo.Direction.REVERSE);
         if(RBAR_REV == 1) rightBar.setDirection(Servo.Direction.REVERSE);
         if(LBAR_REV == 1) leftBar.setDirection(Servo.Direction.REVERSE);
+        if(CLAWB_REV == 1) leftBar.setDirection(Servo.Direction.REVERSE);
 
-        double clawPos = CLAW_MIN;
-        double clawSpeed = 0.08;
+        double clawRightPos = CLAWL_MIN;
+        double clawLeftPos = CLAWR_MIN;
 
         rightBarPos = Range.clip(rightBarPos, RBAR_MIN, RBAR_MAX);
         rightBar.setPosition(rightBarPos);
 
         leftBarPos = Range.clip(leftBarPos, LBAR_MIN, LBAR_MAX);
         leftBar.setPosition(leftBarPos);
+
+        clawBarPos = Range.clip(clawBarPos, CBAR_MIN, CBAR_MAX);
+        clawBar.setPosition(clawBarPos);
 
         boolean stop = true;
 
@@ -90,12 +106,21 @@ public class TeleOpThirdComp extends LinearOpMode {
             double yaw     =  gamepad1.left_stick_x; // side to side
 
             /* ---------------------- CLAW MOVEMENT ---------------------- */
-            if(gamepad2.b) claw.setPosition(CLAW_MIN);
-            if(gamepad2.right_trigger == 1.0) clawPos = CLAW_MAX;
-            else if(gamepad2.left_trigger == 1.0) clawPos = CLAW_MIN;
+//            if(gamepad2.b) claw.setPosition(CLAW_MIN);
+            if(gamepad2.right_trigger == 1.0) {
+                clawRightPos = CLAWR_MAX;
+                clawLeftPos = CLAWL_MIN;
+            }
+            else if(gamepad2.left_trigger == 1.0) {
+                clawRightPos = CLAWR_MIN;
+                clawLeftPos = CLAWL_MAX;
+            }
 
-            clawPos = Range.clip(clawPos, CLAW_MIN, CLAW_MAX);
-            claw.setPosition(clawPos);
+            clawLeftPos = Range.clip(clawLeftPos, CLAWL_MIN, CLAWL_MAX);
+            clawLeft.setPosition(clawLeftPos);
+
+            clawRightPos = Range.clip(clawRightPos, CLAWR_MIN, CLAWR_MAX);
+            clawRight.setPosition(clawRightPos);
 
             /* ---------------------- 2-BAR MOVEMENT ---------------------- */
 //            double servoAxial = gamepad2.right_stick_y;
@@ -104,17 +129,22 @@ public class TeleOpThirdComp extends LinearOpMode {
 //            rightBarPos = Range.clip(servoAxial, RBAR_MIN, RBAR_MAX);
 //            rightBar.setPosition(rightBarPos);
 //
-//            leftBarPos = Range.clip(servoAxial, LBAR_MIN, LBAR_MAX);
+//            leftBarPos = Range.clip(1.0-servoAxial, LBAR_MIN, LBAR_MAX);
 //            leftBar.setPosition(leftBarPos);
+//
+            clawBarPos = Range.clip(leftBarPos, 0.0, 1.0);
+            clawBar.setPosition(clawBarPos);
 
             if(gamepad2.x) rightBar.setPosition(RBAR_MIN);
             if(gamepad2.y) {
                 rightBarPos = RBAR_MAX;
                 leftBarPos = LBAR_MIN;
+                clawBarPos = CBAR_MIN;
             }
             else if(gamepad2.a) {
                 rightBarPos = RBAR_MIN;
                 leftBarPos = LBAR_MAX;
+                clawBarPos = CBAR_MAX;
             }
 
             rightBarPos = Range.clip(rightBarPos, RBAR_MIN, RBAR_MAX);
@@ -122,8 +152,9 @@ public class TeleOpThirdComp extends LinearOpMode {
 
             leftBarPos = Range.clip(leftBarPos, LBAR_MIN, LBAR_MAX);
             leftBar.setPosition(leftBarPos);
-
-
+//
+//            clawBarPos = Range.clip(leftBarPos*1.6, 0.0, 1.0);
+//            clawBar.setPosition(clawBarPos);
 
             /* ---------------------- ROBOT MOVEMENT ---------------------- */
             double axialCoefficient = 1; // 0.53
@@ -161,9 +192,14 @@ public class TeleOpThirdComp extends LinearOpMode {
             rightBackDrive.setPower(rightBackPower);
 
             /* ---------------------- LINEAR SLIDE MOVEMENT ---------------------- */
-            double linearPowerModifier = 1.5;
+            boolean linearSlowModeOn = false;
+
+            if(gamepad2.left_bumper) slowModeOn = true;
+
             double linearAxial = gamepad2.left_stick_y;
-            linearAxial = linearAxial * 0.5;
+            linearAxial = linearAxial * 1;
+
+            double linearPowerModifier = slowModeOn ? 0.2 : 1;
             double linearPower = linearAxial * linearPowerModifier;
 
 //            if(linearSlideMotor.getCurrentPosition() >= 0) linearIsZero = true;

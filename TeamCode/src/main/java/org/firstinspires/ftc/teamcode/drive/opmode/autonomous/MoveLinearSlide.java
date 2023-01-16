@@ -26,7 +26,7 @@ public class MoveLinearSlide extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        slide = hardwareMap.get(DcMotorEx.class, "linearSlide");
+        slide = hardwareMap.get(DcMotorEx.class, "linearSlideRight");
 
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
