@@ -8,21 +8,19 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.drive.tuning.ManualFeedforwardTuner;
-
 @Config
-@Autonomous(name="Test Slide Component")
+@Autonomous(name="Test Slide Component", group="Neat Unit Tests")
 public class LinearSlideTest extends LinearOpMode {
     public DcMotorEx slide;
     public ElapsedTime timer;
 
-    public static int numTimes = 15;
-    public static int reverse = 1;
-    public static double powerTesting = 0.0;
-    public static double initialPosition = 0.0;
-    public static double finalPosition = 20.0;
-    public static double breakTime = 10.0;
-    public static String nameOfSlide = "linearSlideMain";
+    public static int numTimes = 15; // number of times to run opmode
+    public static int reverse = 1; // 1 = motor reversed, 0 = normal
+    public static double powerTesting = 0.0; // power for motor between -1.0 to 1.0
+    public static double initialPosition = 0.0; // initial position of the linear slide (in encoder ticks)
+    public static double finalPosition = 20.0; // final position of the linear slide (in encoder ticks)
+    public static double breakTime = 10.0; // break time between up and down (in seconds)
+    public static String nameOfSlide = "linearSlideMain"; // name of linear slide in the driver station application
 
     enum Mode {
         DRIVER_MODE,
@@ -50,8 +48,10 @@ public class LinearSlideTest extends LinearOpMode {
         while(!isStopRequested()) {
             telemetry.addData("mode", mode);
 
+            /* ----------------------- SWITCH B/W AUTON * TELEOP ----------------------- */
             switch (mode) {
                 case TUNING_MODE:
+                    // Button to switch between op modes
                     if (gamepad1.y) {
                         mode = Mode.DRIVER_MODE;
                     }
@@ -78,12 +78,19 @@ public class LinearSlideTest extends LinearOpMode {
 
                             while (slide.getCurrentPosition() >= 0) {
                                 slide.setPower(-1.0 * powerTesting);
+                                telemetry.addLine("Linear Slide Position: " + slide.getCurrentPosition());
+                                telemetry.update();
                             }
                         }
                     }
 
                     break;
                 case DRIVER_MODE:
+                    // Button to switch between op modes
+                    if (gamepad1.b) {
+                        mode = Mode.TUNING_MODE;
+                    }
+
                     boolean linearSlowModeOn = false;
 
                     if(gamepad1.left_bumper) linearSlowModeOn = true;
@@ -94,7 +101,7 @@ public class LinearSlideTest extends LinearOpMode {
                     double linearPowerModifier = linearSlowModeOn ? 0.2 : 1;
                     double linearPower = linearAxial * linearPowerModifier;
 
-                    telemetry.addData("Linear Slide Position", slide.getCurrentPosition());
+                    telemetry.addData("Current Linear Slide Position", slide.getCurrentPosition());
                     telemetry.update();
 
                     slide.setPower(linearPower);
