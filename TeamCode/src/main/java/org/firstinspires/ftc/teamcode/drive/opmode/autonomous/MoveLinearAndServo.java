@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.autonomous;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+@Disabled
 public class MoveLinearAndServo extends LinearOpMode {
     public Servo claw;
     DcMotorEx slide;

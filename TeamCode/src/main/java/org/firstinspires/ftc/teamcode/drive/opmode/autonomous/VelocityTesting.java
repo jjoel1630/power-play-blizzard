@@ -2,10 +2,12 @@ package org.firstinspires.ftc.teamcode.drive.opmode.autonomous;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.opmode.bot.PowerPlayBot;
 
+@Disabled
 @Config
 @Autonomous(group = "drive")
 public class VelocityTesting extends LinearOpMode {
