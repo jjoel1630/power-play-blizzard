@@ -18,7 +18,7 @@ public class LinearSlideTest extends LinearOpMode {
     public static int reverse = 1; // 1 = motor reversed, 0 = normal
     public static double powerTesting = 0.0; // power for motor between -1.0 to 1.0
     public static double initialPosition = 0.0; // initial position of the linear slide (in encoder ticks)
-    public static double finalPosition = 20.0; // final position of the linear slide (in encoder ticks)
+    public static double finalPosition = 20.0; // final position of the linear slide (in encoder ticks) max: 2260;
     public static double breakTime = 10.0; // break time between up and down (in seconds)
     public static String nameOfSlide = "linearSlideMain"; // name of linear slide in the driver station application
 
@@ -44,7 +44,7 @@ public class LinearSlideTest extends LinearOpMode {
         waitForStart();
         timer = new ElapsedTime();
 
-//        1 rev → 4 ⅜ in → 384.5
+//        1 rev → 4 ⅜ in → 384.5 encoder ticks
         while(!isStopRequested()) {
             telemetry.addData("mode", mode);
 
@@ -58,25 +58,29 @@ public class LinearSlideTest extends LinearOpMode {
 
                     if(gamepad1.a) {
                         for (int i = 0; i <= numTimes; ++i) {
+                            telemetry.addLine("" + emulateClaw(true));
                             telemetry.addLine("THE LINEAR SLIDE IS AT ITS MINIMUM POSITION, PRESS STOP TO STOP THE OPMODE. OTHERWISE WAIT " + breakTime + " SECONDS TO MOVE TO MAXIMUM.");
+                            telemetry.addLine("" + emulateClaw(false));
                             telemetry.update();
 
                             timer.reset();
                             while(timer.seconds() <= breakTime) {}
 
-                            while (slide.getCurrentPosition() <= 2260) {
+                            while (slide.getCurrentPosition() <= finalPosition) {
                                 slide.setPower(powerTesting);
                                 telemetry.addLine("Linear Slide Position: " + slide.getCurrentPosition());
                                 telemetry.update();
                             }
 
+                            telemetry.addLine("" + emulateClaw(true));
                             telemetry.addLine("THE LINEAR SLIDE IS AT ITS MAXIMUM POSITION, PRESS STOP TO STOP THE OPMODE. OTHERWISE WAIT " + breakTime + " SECONDS TO MOVE TO MAXIMUM.");
+                            telemetry.addLine("" + emulateClaw(false));
                             telemetry.update();
 
                             timer.reset();
                             while(timer.seconds() <= breakTime) {}
 
-                            while (slide.getCurrentPosition() >= 0) {
+                            while (slide.getCurrentPosition() >= initialPosition) {
                                 slide.setPower(-1.0 * powerTesting);
                                 telemetry.addLine("Linear Slide Position: " + slide.getCurrentPosition());
                                 telemetry.update();
@@ -109,5 +113,9 @@ public class LinearSlideTest extends LinearOpMode {
                     break;
             }
         }
+    }
+
+    public String emulateClaw(boolean tf) {
+        return (tf ? "open claw" : "close claw");
     }
 }

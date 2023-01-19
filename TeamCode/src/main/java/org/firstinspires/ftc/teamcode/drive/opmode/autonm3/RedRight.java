@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
-@Autonomous(name="Red Right")
+@Autonomous(name="Red Right", group="Neat Unit Tests")
 public class RedRight extends LinearOpMode {
     ElapsedTime timer;
 
@@ -20,7 +20,11 @@ public class RedRight extends LinearOpMode {
 
         drive.setPoseEstimate(new Pose2d(60, 36, Math.toRadians(180)));
 
-        Trajectory goToPole = drive.trajectoryBuilder(new Pose2d())
+        Trajectory goToStorage = drive.trajectoryBuilder(new Pose2d())
+                .lineToLinearHeading(new Pose2d(12, 36, Math.toRadians(225)))
+                .build();
+
+        Trajectory alignToStorageCone = drive.trajectoryBuilder(new Pose2d())
                 .lineToLinearHeading(new Pose2d(12, 36, Math.toRadians(225)))
                 .build();
 
@@ -30,7 +34,7 @@ public class RedRight extends LinearOpMode {
 
         while(opModeIsActive()) {
             /* --------------- GO TO POLE --------------- */
-            drive.followTrajectory(goToPole);
+            drive.followTrajectory(goToStorage);
 
             /* --------------- ALIGN TO POLE --------------- */
 

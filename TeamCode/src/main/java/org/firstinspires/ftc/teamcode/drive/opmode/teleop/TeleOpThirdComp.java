@@ -194,12 +194,12 @@ public class TeleOpThirdComp extends LinearOpMode {
             /* ---------------------- LINEAR SLIDE MOVEMENT ---------------------- */
             boolean linearSlowModeOn = false;
 
-            if(gamepad2.left_bumper) slowModeOn = true;
+            if(gamepad2.left_bumper) linearSlowModeOn = true;
 
             double linearAxial = gamepad2.left_stick_y;
             linearAxial = linearAxial * 1;
 
-            double linearPowerModifier = slowModeOn ? 0.2 : 1;
+            double linearPowerModifier = linearSlowModeOn ? 0.2 : 1;
             double linearPower = linearAxial * linearPowerModifier;
 
 //            if(linearSlideMotor.getCurrentPosition() >= 0) linearIsZero = true;
