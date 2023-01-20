@@ -30,6 +30,8 @@ public class ClawTestAuton extends LinearOpMode {
     /* ---------------------------------------------------------------------------- */
     /* ---------------------------------------------------------------------------- */
 
+    // Make sure to add the Min and Max values from the claw testing opmode
+
     @Override
     public void runOpMode() throws InterruptedException {
         RobotLog.addGlobalWarningMessage("PLEASE LOOK AT THE CLAWTEST.JAVA FILE & ZERO OUT THE MOTORS BEFORE YOUR PROCEED WITH THIS OPMODE.");
