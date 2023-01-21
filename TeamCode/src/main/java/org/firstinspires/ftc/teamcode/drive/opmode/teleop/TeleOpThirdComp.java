@@ -43,27 +43,32 @@ public class TeleOpThirdComp extends LinearOpMode {
     private Servo leftBar;
     private Servo clawBar;
 
-    public static double CLAWL_MIN= 0.85;
+    public static double CLAWL_MIN= 0.75;
     public static double CLAWL_MAX = 1.0;
     public static double CLAWR_MIN= 0.0;
     public static double CLAWR_MAX = 0.15;
 
     @Override
     public void runOpMode() {
-        leftFrontDrive = hardwareMap.get(DcMotorEx.class, "leftFront");
+//        leftFrontDrive = hardwareMap.get(DcMotorEx.class, "leftFront");
+//        leftBackDrive = hardwareMap.get(DcMotorEx.class, "leftRear");
+//        rightFrontDrive = hardwareMap.get(DcMotorEx.class, "rightFront");
+//        rightBackDrive = hardwareMap.get(DcMotorEx.class, "rightRear");
+
+        rightFrontDrive = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftBackDrive = hardwareMap.get(DcMotorEx.class, "leftRear");
-        rightFrontDrive = hardwareMap.get(DcMotorEx.class, "rightFront");
+        leftFrontDrive = hardwareMap.get(DcMotorEx.class, "rightFront");
         rightBackDrive = hardwareMap.get(DcMotorEx.class, "rightRear");
 
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+//        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        linearSlideRightMotor = hardwareMap.get(DcMotorEx.class, "linearSlideRight");
+        linearSlideRightMotor = hardwareMap.get(DcMotorEx.class, "linearSlide");
         linearSlideRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearSlideRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linearSlideRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        linearSlideLeftMotor = hardwareMap.get(DcMotorEx.class, "linearSlideLeft");
+        linearSlideLeftMotor = hardwareMap.get(DcMotorEx.class, "linearSlide");
         linearSlideLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearSlideLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linearSlideLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -71,11 +76,11 @@ public class TeleOpThirdComp extends LinearOpMode {
 
         boolean linearIsZero = false;
 
-        clawLeft = hardwareMap.servo.get("clawLeft");
+        clawLeft = hardwareMap.servo.get("claw");
         clawRight = hardwareMap.servo.get("clawRight");
-        rightBar = hardwareMap.servo.get("rightBar");
-        leftBar = hardwareMap.servo.get("leftBar");
-        clawBar = hardwareMap.servo.get("clawBar");
+        rightBar = hardwareMap.servo.get("clawLeft");
+        leftBar = hardwareMap.servo.get("rightBar");
+        clawBar = hardwareMap.servo.get("leftBar");
 
         if(CLAWLEFT_REV == 1) clawLeft.setDirection(Servo.Direction.REVERSE);
         if(CLAWRIGHT_REV == 1) clawRight.setDirection(Servo.Direction.REVERSE);
@@ -83,17 +88,17 @@ public class TeleOpThirdComp extends LinearOpMode {
         if(LBAR_REV == 1) leftBar.setDirection(Servo.Direction.REVERSE);
         if(CLAWB_REV == 1) leftBar.setDirection(Servo.Direction.REVERSE);
 
-        double clawRightPos = CLAWL_MIN;
+//        double clawRightPos = CLAWL_MIN;
         double clawLeftPos = CLAWR_MIN;
 
-        rightBarPos = Range.clip(rightBarPos, RBAR_MIN, RBAR_MAX);
-        rightBar.setPosition(rightBarPos);
-
-        leftBarPos = Range.clip(leftBarPos, LBAR_MIN, LBAR_MAX);
-        leftBar.setPosition(leftBarPos);
-
-        clawBarPos = Range.clip(clawBarPos, CBAR_MIN, CBAR_MAX);
-        clawBar.setPosition(clawBarPos);
+//        rightBarPos = Range.clip(rightBarPos, RBAR_MIN, RBAR_MAX);
+//        rightBar.setPosition(rightBarPos);
+//
+//        leftBarPos = Range.clip(leftBarPos, LBAR_MIN, LBAR_MAX);
+//        leftBar.setPosition(leftBarPos);
+//
+//        clawBarPos = Range.clip(clawBarPos, CBAR_MIN, CBAR_MAX);
+//        clawBar.setPosition(clawBarPos);
 
         boolean stop = true;
 
@@ -108,19 +113,18 @@ public class TeleOpThirdComp extends LinearOpMode {
             /* ---------------------- CLAW MOVEMENT ---------------------- */
 //            if(gamepad2.b) claw.setPosition(CLAW_MIN);
             if(gamepad2.right_trigger == 1.0) {
-                clawRightPos = CLAWR_MAX;
                 clawLeftPos = CLAWL_MIN;
             }
             else if(gamepad2.left_trigger == 1.0) {
-                clawRightPos = CLAWR_MIN;
+//                clawRightPos = CLAWR_MIN;
                 clawLeftPos = CLAWL_MAX;
             }
 
             clawLeftPos = Range.clip(clawLeftPos, CLAWL_MIN, CLAWL_MAX);
             clawLeft.setPosition(clawLeftPos);
 
-            clawRightPos = Range.clip(clawRightPos, CLAWR_MIN, CLAWR_MAX);
-            clawRight.setPosition(clawRightPos);
+//            clawRightPos = Range.clip(clawRightPos, CLAWR_MIN, CLAWR_MAX);
+//            clawRight.setPosition(clawRightPos);
 
             /* ---------------------- 2-BAR MOVEMENT ---------------------- */
 //            double servoAxial = gamepad2.right_stick_y;
@@ -132,26 +136,26 @@ public class TeleOpThirdComp extends LinearOpMode {
 //            leftBarPos = Range.clip(1.0-servoAxial, LBAR_MIN, LBAR_MAX);
 //            leftBar.setPosition(leftBarPos);
 //
-            clawBarPos = Range.clip(leftBarPos, 0.0, 1.0);
-            clawBar.setPosition(clawBarPos);
+//            clawBarPos = Range.clip(leftBarPos, 0.0, 1.0);
+//            clawBar.setPosition(clawBarPos);
 
-            if(gamepad2.x) rightBar.setPosition(RBAR_MIN);
-            if(gamepad2.y) {
-                rightBarPos = RBAR_MAX;
-                leftBarPos = LBAR_MIN;
-                clawBarPos = CBAR_MIN;
-            }
-            else if(gamepad2.a) {
-                rightBarPos = RBAR_MIN;
-                leftBarPos = LBAR_MAX;
-                clawBarPos = CBAR_MAX;
-            }
-
-            rightBarPos = Range.clip(rightBarPos, RBAR_MIN, RBAR_MAX);
-            rightBar.setPosition(rightBarPos);
-
-            leftBarPos = Range.clip(leftBarPos, LBAR_MIN, LBAR_MAX);
-            leftBar.setPosition(leftBarPos);
+//            if(gamepad2.x) rightBar.setPosition(RBAR_MIN);
+//            if(gamepad2.y) {
+//                rightBarPos = RBAR_MAX;
+//                leftBarPos = LBAR_MIN;
+//                clawBarPos = CBAR_MIN;
+//            }
+//            else if(gamepad2.a) {
+//                rightBarPos = RBAR_MIN;
+//                leftBarPos = LBAR_MAX;
+//                clawBarPos = CBAR_MAX;
+//            }
+//
+//            rightBarPos = Range.clip(rightBarPos, RBAR_MIN, RBAR_MAX);
+//            rightBar.setPosition(rightBarPos);
+//
+//            leftBarPos = Range.clip(leftBarPos, LBAR_MIN, LBAR_MAX);
+//            leftBar.setPosition(leftBarPos);
 //
 //            clawBarPos = Range.clip(leftBarPos*1.6, 0.0, 1.0);
 //            clawBar.setPosition(clawBarPos);
@@ -169,7 +173,7 @@ public class TeleOpThirdComp extends LinearOpMode {
             if(gamepad1.left_bumper) slowModeOn = true;
             if(gamepad1.right_bumper) slowModeOn = false;
 
-            double powerModifier = slowModeOn ? 0.3 : 1;
+            double powerModifier = slowModeOn ? 0.4 : 0.7;
             double leftFrontPower  = (axial + lateral + yaw) * powerModifier;
             double rightFrontPower = (axial - lateral - yaw) * powerModifier;
             double leftBackPower   = (axial - lateral + yaw) * powerModifier;
