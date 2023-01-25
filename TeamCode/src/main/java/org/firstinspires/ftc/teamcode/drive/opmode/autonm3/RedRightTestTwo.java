@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
-@Autonomous(name="Red Right", group="Neat Unit Tests")
-public class RedRight extends LinearOpMode {
+@Autonomous(name="Red Right Test Two", group="Neat Unit Tests")
+public class RedRightTestTwo extends LinearOpMode {
     ElapsedTime timer;
 
     private DcMotorEx linearSlide = null;
@@ -22,25 +22,21 @@ public class RedRight extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        drive.setPoseEstimate(new Pose2d(60, 36, Math.toRadians(180)));
+        Pose2d startPose = new Pose2d(60, 36, Math.toRadians(180));
+        Pose2d storageArea = new Pose2d(12, 36, Math.toRadians(90));
+        Pose2d scoringPole = new Pose2d(0, 24, Math.toRadians(225));
 
-        Trajectory goToStorage = drive.trajectoryBuilder(new Pose2d())
-                .lineToLinearHeading(new Pose2d(12, 36, Math.toRadians(90)))
+        drive.setPoseEstimate(startPose);
+
+        Trajectory goToStorage = drive.trajectoryBuilder(startPose)
+                .lineToLinearHeading(storageArea)
                 .build();
 
-        Trajectory goToPolePreloaded = drive.trajectoryBuilder(new Pose2d())
+        Trajectory goToPolePreloaded = drive.trajectoryBuilder(startPose)
                 .lineToLinearHeading(new Pose2d(0, 24, Math.toRadians(225)))
                 .build();
 
         Trajectory goToPoleStorage = drive.trajectoryBuilder(new Pose2d())
-                .lineToLinearHeading(new Pose2d(0, 24, Math.toRadians(225)))
-                .build();
-
-        Trajectory alignToStorageCone = drive.trajectoryBuilder(new Pose2d())
-                .lineToLinearHeading(new Pose2d(12, 36, Math.toRadians(225)))
-                .build();
-
-        Trajectory scoreFirstStorageCone = drive.trajectoryBuilder(new Pose2d())
                 .lineToLinearHeading(new Pose2d(0, 24, Math.toRadians(225)))
                 .build();
 

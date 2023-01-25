@@ -20,10 +20,15 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 
+@Config
+@Autonomous(name="Right Red Full")
 public class RedRightFull extends LinearOpMode {
     private ElapsedTime timer;
 
     public static int POSITION = 1;
+
+    public static int strafeInches = 40;
+    public static int forwardInches = 27;
 
     String webcamName = "Webcam 1";
     SleeveColorDetection sleeveDetection;
@@ -36,15 +41,15 @@ public class RedRightFull extends LinearOpMode {
         drive.setPoseEstimate(new Pose2d(60, 36, Math.toRadians(180)));
 
         Trajectory parkFront = drive.trajectoryBuilder(new Pose2d())
-                .lineToLinearHeading(new Pose2d(30, 36, Math.toRadians(90)))
+                .forward(forwardInches)
                 .build();
 
-        Trajectory parkLeft = drive.trajectoryBuilder(new Pose2d())
-                .lineToLinearHeading(new Pose2d(30, 36, Math.toRadians(90)))
+        Trajectory parkLeft = drive.trajectoryBuilder(parkFront.end())
+                .strafeLeft(strafeInches)
                 .build();
 
-        Trajectory parkRight = drive.trajectoryBuilder(new Pose2d())
-                .lineToLinearHeading(new Pose2d(30, 36, Math.toRadians(90)))
+        Trajectory parkRight = drive.trajectoryBuilder(parkFront.end())
+                .strafeRight(strafeInches)
                 .build();
 
         /* ----------------------- CAMERA init ----------------------- */
@@ -79,12 +84,16 @@ public class RedRightFull extends LinearOpMode {
 
         while(opModeIsActive()) {
             if(POSITION == 0) {
+                drive.followTrajectory(parkFront);
                 drive.followTrajectory(parkLeft);
             } else if(POSITION == 1) {
                 drive.followTrajectory(parkFront);
             } else if(POSITION == 2) {
+                drive.followTrajectory(parkFront);
                 drive.followTrajectory(parkRight);
             }
+
+            break;
         }
     }
 }

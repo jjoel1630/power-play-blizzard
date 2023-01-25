@@ -31,7 +31,7 @@ public class LinearSlideTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        slide = hardwareMap.get(DcMotorEx.class, "linearSlideMain");
+        slide = hardwareMap.get(DcMotorEx.class, nameOfSlide);
 
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -39,7 +39,7 @@ public class LinearSlideTest extends LinearOpMode {
 
         if(reverse == 1) slide.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        mode = Mode.DRIVER_MODE;
+        mode = Mode.TUNING_MODE;
 
         waitForStart();
         timer = new ElapsedTime();

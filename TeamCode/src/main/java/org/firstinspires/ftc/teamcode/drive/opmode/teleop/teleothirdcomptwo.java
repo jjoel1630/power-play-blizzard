@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 @Config
@@ -16,9 +17,14 @@ public class teleothirdcomptwo extends LinearOpMode {
     private DcMotorEx rightFrontDrive = null;
     private DcMotorEx rightBackDrive = null;
 
+    ElapsedTime timer;
+
     public static int encoderTicksHigh = 20;
     public static int encoderTicksMedium = 20;
     public static int encoderTicksLow = 20;
+
+    public static double minDtPower = 0.4;
+    public static double maxDtPower = 0.7;
 
     public static double linearPowerTesting = 0.05;
 
@@ -49,6 +55,8 @@ public class teleothirdcomptwo extends LinearOpMode {
 
         waitForStart();
 
+        timer = new ElapsedTime();
+
         while (opModeIsActive()) {
             double max;
             double axial = -gamepad1.left_stick_y;  // forward, back
@@ -75,13 +83,20 @@ public class teleothirdcomptwo extends LinearOpMode {
             if(gamepad1.left_bumper) slowModeOn = true;
             if(gamepad1.right_bumper) slowModeOn = false;
 
-            double powerModifier = slowModeOn ? 0.5 : 0.7;
+            double powerModifier = slowModeOn ? 0.3 : 0.7;
             double leftFrontPower  = (axial + lateral + yaw) * powerModifier;
             double rightFrontPower = (axial - lateral - yaw) * powerModifier;
             double leftBackPower   = (axial - lateral + yaw) * powerModifier;
             double rightBackPower  = (axial + lateral - yaw) * powerModifier;
 
+            if(gamepad1.right_trigger == 1.0) {
+                timer.reset();
+            }
+
             if(gamepad1.y) {
+//                powerModifier = powerModifier * (timer.seconds() / 10);
+//                powerModifier = Range.clip(powerModifier, -1 * minDtPower, maxDtPower);
+
                 leftFrontPower  = powerModifier;
                 rightFrontPower = powerModifier;
                 leftBackPower   = powerModifier;
@@ -135,11 +150,11 @@ public class teleothirdcomptwo extends LinearOpMode {
             double linearAxial = gamepad2.left_stick_y;
             linearAxial = linearAxial * 1;
 
-//            double linearPowerModifier = linearSlowModeOn ? 0.1 : 0.1;
-            double linearPowerModifier = linearPowerTesting;
+            double linearPowerModifier = linearSlowModeOn ? 0.1 : 0.75;
+//            double linearPowerModifier = linearPowerTesting;
             double linearPower = linearAxial * linearPowerModifier;
 
-            if(linearSlide.getCurrentPosition() <= 20 && isDown) {
+            if(linearSlide.getCurrentPosition() <= 10 && isDown) {
                 linearPower = 0;
             }
 
@@ -164,6 +179,10 @@ public class teleothirdcomptwo extends LinearOpMode {
             if(gamepad2.b) {
                 isDown = false;
             }
+
+//            if(gamepad2.right_bumper) {
+//                isDown = true;
+//            }
 
             telemetry.addData("Leftfront power", leftFrontPower);
             telemetry.addData("Leftback power", leftFrontPower);
