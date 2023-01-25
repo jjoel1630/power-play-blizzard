@@ -22,7 +22,7 @@ public class OdoTrue {
     public int prevLeftPos = 0;
     public int prevNormPos = 0;
 
-    public XyhVector start = new XyhVector(213, 102, Math.toRadians(90));
+    public XyhVector start = new XyhVector(0, 0, Math.toRadians(0));
     public XyhVector pos = new XyhVector(start);
 
     private HardwareMap hMap;
@@ -30,15 +30,15 @@ public class OdoTrue {
     public OdoTrue(HardwareMap hM) {
         hMap = hM;
 
-        DcMotor left = hMap.dcMotor.get("left");
+        DcMotor left = hMap.dcMotor.get("leftFront");
         left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        DcMotor right = hMap.dcMotor.get("right");
+        DcMotor right = hMap.dcMotor.get("rightFront");
         left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        DcMotor normal = hMap.dcMotor.get("normal");
+        DcMotor normal = hMap.dcMotor.get("leftRear");
         left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
