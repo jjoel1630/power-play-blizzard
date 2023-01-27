@@ -19,18 +19,18 @@ public class OdoTesting extends LinearOpMode {
         // Odometry = leftFront, leftRear, rightFront;
         robot.init(this, hardwareMap, telemetry);
 
-        OdoTrue drive = new OdoTrue(hardwareMap);
+//        OdoTrue drive = new OdoTrue(hardwareMap);
 
         waitForStart();
 
         timer.reset();
 
         while(opModeIsActive()) {
-            drive.odometry();
-
-            telemetry.addData("Left, Right, Normal", "%6d      %6d      %6d", drive.curLeftPos, drive.curRightPos, drive.curNormPos);
-            telemetry.addData("X pos, Y pos, Heading", "%6.1f cm    %6.1f cm    %6.1f cm", drive.pos.x, drive.pos.y, drive.pos.heading);
-            telemetry.update();
+//            drive.odometry();
+//
+//            telemetry.addData("Left, Right, Normal", "%6d      %6d      %6d", drive.curLeftPos, drive.curRightPos, drive.curNormPos);
+//            telemetry.addData("X pos, Y pos, Heading", "%6.1f cm    %6.1f cm    %6.1f cm", drive.pos.x, drive.pos.y, drive.pos.heading);
+//            telemetry.update();
 
             timer.reset();
         }

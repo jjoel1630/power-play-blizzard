@@ -9,10 +9,12 @@ public class OdoTrue {
     public DcMotor encoderRight;
     public DcMotor encoderNormal;
 
-    public static double lateral = 20.12;
-    public static double midpoint = 11.5;
-    public static double wheelRad = 3.0;
-    public static double cmTick = 2.0 * Math.PI * wheelRad / 8192;
+    public double lateral = 20.12;
+    public double midpoint = 11.5;
+    public double wheelRad = 3.0;
+    public double cmTick = 2.0 * Math.PI * wheelRad / 8192;
+
+    public boolean stopCounting = false;
 
     public int curRightPos = 0;
     public int curLeftPos = 0;
@@ -26,6 +28,31 @@ public class OdoTrue {
     public XyhVector pos = new XyhVector(start);
 
     private HardwareMap hMap;
+
+    public OdoTrue(HardwareMap hM, double wheelRad, double lateral, double midpoint) {
+        hMap = hM;
+
+        DcMotor left = hMap.dcMotor.get("leftFront");
+        left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        DcMotor right = hMap.dcMotor.get("rightFront");
+        left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        DcMotor normal = hMap.dcMotor.get("leftRear");
+        left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        encoderLeft = left;
+        encoderRight = right;
+        encoderNormal = normal;
+
+        this.lateral = lateral;
+        this.wheelRad = wheelRad;
+        this.midpoint = midpoint;
+        this.cmTick = 2.0 * Math.PI * wheelRad / 8192;
+    }
 
     public OdoTrue(HardwareMap hM) {
         hMap = hM;
