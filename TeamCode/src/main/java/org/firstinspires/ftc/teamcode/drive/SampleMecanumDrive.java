@@ -62,7 +62,9 @@ public class SampleMecanumDrive extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
 
-    public static double LATERAL_MULTIPLIER = 0.92966;
+    public static double LATERAL_MULTIPLIER = 1.29648965629;
+//    public static double LATERAL_MULTIPLIER = 1.32019;
+//    public static double LATERAL_MULTIPLIER = 0.92966;
 //    public static double LATERAL_MULTIPLIER = 0.98323;
 
     public static double VX_WEIGHT = 1;
@@ -149,10 +151,10 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
-//        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
 //        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
 //        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-//        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
@@ -286,26 +288,26 @@ public class SampleMecanumDrive extends MecanumDrive {
     @Override
     public List<Double> getWheelPositions() {
         List<Double> wheelPositions = new ArrayList<>();
-        wheelPositions.add(encoderTicksToInches((motors.get(0).getCurrentPosition())));
-        wheelPositions.add(encoderTicksToInches((motors.get(1).getCurrentPosition())));
-        wheelPositions.add(encoderTicksToInches((motors.get(2).getCurrentPosition()) * -1));
-        wheelPositions.add(encoderTicksToInches((motors.get(3).getCurrentPosition()) * -1));
-//        for (DcMotorEx motor : motors) {
-//            wheelPositions.add(encoderTicksToInches(motor.getCurrentPosition()) * 1);
-//        }
+//        wheelPositions.add(encoderTicksToInches((motors.get(0).getCurrentPosition())));
+//        wheelPositions.add(encoderTicksToInches((motors.get(1).getCurrentPosition())));
+//        wheelPositions.add(encoderTicksToInches((motors.get(2).getCurrentPosition())));
+//        wheelPositions.add(encoderTicksToInches((motors.get(3).getCurrentPosition())));
+        for (DcMotorEx motor : motors) {
+            wheelPositions.add(encoderTicksToInches(motor.getCurrentPosition()) * 1);
+        }
         return wheelPositions;
     }
 
     @Override
     public List<Double> getWheelVelocities() {
         List<Double> wheelVelocities = new ArrayList<>();
-        wheelVelocities.add(encoderTicksToInches(motors.get(0).getVelocity()) * 1);
-        wheelVelocities.add(encoderTicksToInches(motors.get(1).getVelocity()) * 1);
-        wheelVelocities.add(encoderTicksToInches(motors.get(2).getVelocity()) * -1);
-        wheelVelocities.add(encoderTicksToInches(motors.get(3).getVelocity()) * -1);
-//        for (DcMotorEx motor : motors) {
-//            wheelVelocities.add(encoderTicksToInches(motor.getVelocity()) * 1);
-//        }
+//        wheelVelocities.add(encoderTicksToInches(motors.get(0).getVelocity()) * 1);
+//        wheelVelocities.add(encoderTicksToInches(motors.get(1).getVelocity()) * 1);
+//        wheelVelocities.add(encoderTicksToInches(motors.get(2).getVelocity()) * -1);
+//        wheelVelocities.add(encoderTicksToInches(motors.get(3).getVelocity()) * -1);
+        for (DcMotorEx motor : motors) {
+            wheelVelocities.add(encoderTicksToInches(motor.getVelocity()) * 1);
+        }
         return wheelVelocities;
     }
 

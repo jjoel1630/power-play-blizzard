@@ -24,8 +24,8 @@ public class OdoNakedDt extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         // Odometry = leftFront, leftRear, rightFront;
         left = hardwareMap.get(DcMotorEx.class, "leftFront");
-        norm = hardwareMap.get(DcMotorEx.class, "leftRear");
-        right = hardwareMap.get(DcMotorEx.class, "rightRear");
+        norm = hardwareMap.get(DcMotorEx.class, "rightRear");
+        right = hardwareMap.get(DcMotorEx.class, "rightFront");
 
         waitForStart();
 
