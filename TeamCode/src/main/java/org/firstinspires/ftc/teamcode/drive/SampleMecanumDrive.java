@@ -59,8 +59,8 @@ public class SampleMecanumDrive extends MecanumDrive {
 //    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0);
 //    public static PIDCoefficients HEADING_PID = new PIDCoefficients(12, 0, 0);
 
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
 
     public static double LATERAL_MULTIPLIER = 1.29648965629;
 //    public static double LATERAL_MULTIPLIER = 1.32019;
@@ -319,10 +319,11 @@ public class SampleMecanumDrive extends MecanumDrive {
         rightFront.setPower(v3);
     }
 
+    public double getIMUHeadingCustom() {
+        return imu.getAngularOrientation().firstAngle;
+    }
+
     @Override
-//    public double getRawExternalHeading() {
-//        return imu.getAngularOrientation().firstAngle;
-//    }
     public double getRawExternalHeading() {
         return 0;
     }

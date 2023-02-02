@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
+import java.util.ArrayList;
+
 /**
  * This is a simple teleop routine for testing localization. Drive the robot around like a normal
  * teleop routine and make sure the robot's estimated pose matches the robot's actual pose (slight
@@ -29,6 +31,11 @@ public class LocalizationTest extends LinearOpMode {
 
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+//        double[][] arr = new double[50][3];
+        ArrayList<double[]> a = new ArrayList<double[]>();
+
+        int i = 0;
+
         waitForStart();
 
         while (!isStopRequested()) {
@@ -50,6 +57,21 @@ public class LocalizationTest extends LinearOpMode {
             telemetry.addData("left", drive.leftFront.getCurrentPosition());
             telemetry.addData("right", drive.rightFront.getCurrentPosition());
             telemetry.addData("normal", drive.rightRear.getCurrentPosition());
+
+            if(gamepad1.a) {
+                telemetry.addData("left", (drive.leftFront.getCurrentPosition()/8192) * 2*Math.PI*1.88976);
+                telemetry.addData("right", (drive.rightFront.getCurrentPosition()/8192) * 2*Math.PI*1.88976);
+                telemetry.addData("normal", (drive.rightRear.getCurrentPosition()/8192) * 2*Math.PI*1.88976);
+                telemetry.update();
+
+                double[] d = {drive.leftFront.getCurrentPosition(), drive.rightFront.getCurrentPosition(), drive.rightRear.getCurrentPosition()};
+                a.add(d);
+            }
+
+            for(double[] f : a) {
+                telemetry.addLine("left, right, normal: " + f[0] + " " + f[1] + " " + f[2] + "\n");
+            }
+
             telemetry.update();
         }
     }
