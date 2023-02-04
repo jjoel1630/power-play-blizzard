@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -38,10 +39,17 @@ public class teleothirdcomptwo extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 //        rightRear, leftRear, leftFront, rightFront
-        rightFrontDrive = hardwareMap.get(DcMotorEx.class, "leftFront");
+//        rightFrontDrive = hardwareMap.get(DcMotorEx.class, "leftFront");
+//        leftBackDrive = hardwareMap.get(DcMotorEx.class, "leftRear");
+//        leftFrontDrive = hardwareMap.get(DcMotorEx.class, "rightFront");
+//        rightBackDrive = hardwareMap.get(DcMotorEx.class, "rightRear");
+        leftFrontDrive = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftBackDrive = hardwareMap.get(DcMotorEx.class, "leftRear");
-        leftFrontDrive = hardwareMap.get(DcMotorEx.class, "rightFront");
+        rightFrontDrive = hardwareMap.get(DcMotorEx.class, "rightFront");
         rightBackDrive = hardwareMap.get(DcMotorEx.class, "rightRear");
+
+        leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
         linearSlide = hardwareMap.get(DcMotorEx.class, "linearSlide");
         linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -60,8 +68,8 @@ public class teleothirdcomptwo extends LinearOpMode {
         while (opModeIsActive()) {
             double max;
             double axial = -gamepad1.left_stick_y;  // forward, back
-            double lateral = gamepad1.right_stick_x; // turning
-            double yaw = -gamepad1.left_stick_x; // side to side
+            double lateral = gamepad1.left_stick_x; // side to side
+            double yaw = gamepad1.right_stick_x; // turning
 
             /* ---------------------- CLAW MOVEMENT ---------------------- */
             if(gamepad2.right_trigger == 1.0) clawPos = CLAW_MIN;
@@ -111,15 +119,15 @@ public class teleothirdcomptwo extends LinearOpMode {
             }
 
             if(gamepad1.b) {
-                leftFrontPower  = -powerModifier;
-                rightFrontPower = powerModifier;
+                leftFrontPower  = powerModifier;
+                rightFrontPower = -powerModifier;
                 leftBackPower   = -powerModifier;
                 rightBackPower  = powerModifier;
             }
 
             if(gamepad1.x) {
-                leftFrontPower  = powerModifier;
-                rightFrontPower = -powerModifier;
+                leftFrontPower  = -powerModifier;
+                rightFrontPower = powerModifier;
                 leftBackPower   = powerModifier;
                 rightBackPower  = -powerModifier;
             }

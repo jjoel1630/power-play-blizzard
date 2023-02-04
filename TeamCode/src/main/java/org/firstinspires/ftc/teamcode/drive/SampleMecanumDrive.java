@@ -59,10 +59,11 @@ public class SampleMecanumDrive extends MecanumDrive {
 //    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0);
 //    public static PIDCoefficients HEADING_PID = new PIDCoefficients(12, 0, 0);
 
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(7.5, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(10, 0, 0);
 
-    public static double LATERAL_MULTIPLIER = 1.29648965629;
+//    public static double LATERAL_MULTIPLIER = 1.29648965629;
+    public static double LATERAL_MULTIPLIER = 1.28932;
 //    public static double LATERAL_MULTIPLIER = 1.32019;
 //    public static double LATERAL_MULTIPLIER = 0.92966;
 //    public static double LATERAL_MULTIPLIER = 0.98323;
@@ -153,8 +154,8 @@ public class SampleMecanumDrive extends MecanumDrive {
         // TODO: reverse any motors using DcMotor.setDirection()
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
 //        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
-//        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+//        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
