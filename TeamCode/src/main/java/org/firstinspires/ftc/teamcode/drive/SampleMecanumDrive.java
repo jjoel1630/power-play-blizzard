@@ -56,17 +56,10 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
-//    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0);
-//    public static PIDCoefficients HEADING_PID = new PIDCoefficients(12, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
 
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(7.5, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(10, 0, 0);
-
-//    public static double LATERAL_MULTIPLIER = 1.29648965629;
-    public static double LATERAL_MULTIPLIER = 1.28932;
-//    public static double LATERAL_MULTIPLIER = 1.32019;
-//    public static double LATERAL_MULTIPLIER = 0.92966;
-//    public static double LATERAL_MULTIPLIER = 0.98323;
+    public static double LATERAL_MULTIPLIER = 1.0;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -101,10 +94,10 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         // TODO: adjust the names of the following hardware devices et(BNO055IMU.class, "imu");
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-        imu.initialize(parameters);
+//        imu = hardwareMap.get(BNO055IMU.class, "imu");
+//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+//        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+//        imu.initialize(parameters);
 
         // TODO: If the hub containing the IMU you are using is mounted so that the "REV" logo does
         // not face up, remap the IMU axes so that the z-axis points upward (normal to the floor.)
@@ -126,7 +119,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         // and the placement of the dot/orientation from https://docs.revrobotics.com/rev-control-system/control-system-overview/dimensions#imu-location
         //
         // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
-         BNO055IMUUtil.remapZAxis(imu, AxisDirection.POS_Y);
+//         BNO055IMUUtil.remapZAxis(imu, AxisDirection.POS_Y);
 
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
@@ -250,10 +243,6 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
     }
 
-//    lf --> 2440, 2500, 2480, 2500, 2520, 2500
-//    lr --> 2480, 2560, 2580, 2560, 2600, 2580
-//    rf --> 2500, 2540, 2540, 2520, 2540, 2520
-//    rr --> 2460, 2460, 2480, 2460, 2460, 2460
     public void setPIDFCoefficients(DcMotor.RunMode runMode, PIDFCoefficients coefficients) {
         PIDFCoefficients compensatedCoefficients = new PIDFCoefficients(
                 coefficients.p, coefficients.i, coefficients.d,
@@ -289,10 +278,6 @@ public class SampleMecanumDrive extends MecanumDrive {
     @Override
     public List<Double> getWheelPositions() {
         List<Double> wheelPositions = new ArrayList<>();
-//        wheelPositions.add(encoderTicksToInches((motors.get(0).getCurrentPosition())));
-//        wheelPositions.add(encoderTicksToInches((motors.get(1).getCurrentPosition())));
-//        wheelPositions.add(encoderTicksToInches((motors.get(2).getCurrentPosition())));
-//        wheelPositions.add(encoderTicksToInches((motors.get(3).getCurrentPosition())));
         for (DcMotorEx motor : motors) {
             wheelPositions.add(encoderTicksToInches(motor.getCurrentPosition()) * 1);
         }
@@ -302,10 +287,6 @@ public class SampleMecanumDrive extends MecanumDrive {
     @Override
     public List<Double> getWheelVelocities() {
         List<Double> wheelVelocities = new ArrayList<>();
-//        wheelVelocities.add(encoderTicksToInches(motors.get(0).getVelocity()) * 1);
-//        wheelVelocities.add(encoderTicksToInches(motors.get(1).getVelocity()) * 1);
-//        wheelVelocities.add(encoderTicksToInches(motors.get(2).getVelocity()) * -1);
-//        wheelVelocities.add(encoderTicksToInches(motors.get(3).getVelocity()) * -1);
         for (DcMotorEx motor : motors) {
             wheelVelocities.add(encoderTicksToInches(motor.getVelocity()) * 1);
         }

@@ -33,13 +33,9 @@ public class DriveConstants {
      * If using the built-in motor velocity PID, update MOTOR_VELO_PID with the tuned coefficients
      * from DriveVelocityPIDTuner.
      */
-//    public static final boolean RUN_USING_ENCODER = true;
     public static final boolean RUN_USING_ENCODER = false;
 
-//    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(12, 0, 6,
-//            20);
     public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0, getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
-//    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(12, 0, 6, 17);
 
 //    f = getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV)
     /*
@@ -52,7 +48,7 @@ public class DriveConstants {
      */
 
     public static double WHEEL_RADIUS = 1.88976; // in
-    public static double GEAR_RATIO = 1.022727; // output (wheel) speed / input (motor) speed
+    public static double GEAR_RATIO = 1.0; // output (wheel) speed / input (motor) speed
     public static double TRACK_WIDTH = 11.1; // in
 
     /*
@@ -61,10 +57,9 @@ public class DriveConstants {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-//    public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
     // Double wheel odometry
-    public static double kV = 0.0160;
-    public static double kA = 0.00155;
+    public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
+    public static double kA = 0.0;
     public static double kStatic = 0.07220;
 
     /*
@@ -96,8 +91,7 @@ public class DriveConstants {
      */
     public static double MAX_VEL = 30.0;
     public static double MAX_ACCEL = 30.0;
-    public static double MAX_ANG_VEL = Math.toRadians(295.427682273375);
-//    public static double MAX_ANG_VEL = Math.toRadians(280.08695372029416);
+    public static double MAX_ANG_VEL = Math.toRadians(184.02607784577722);
     public static double MAX_ANG_ACCEL = Math.toRadians(184.02607784577722);
 
 
