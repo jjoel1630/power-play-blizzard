@@ -4,3 +4,4 @@ java_*.hprof
 TeamCode/build
 FtcRobotController/build
 local.properties
+.DS_Store
