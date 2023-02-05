@@ -1,51 +1,96 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.autonm4;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
+@Config
+@Autonomous(name="pathfinding testing")
 public class PathFindingTesting extends LinearOpMode {
-    public static Vector2d v1 = new Vector2d(12, -48);
-    public static Vector2d v2 = new Vector2d(12, -14);
-    public static Vector2d v3 = new Vector2d(24, -10);
-    public static Vector2d storage = new Vector2d(68, -12);
-    public static Vector2d high = new Vector2d(24, -10);
+    public static double splineTangent = 90;
+    public static Vector2d v1 = new Vector2d(-32.275, 64.25);
+    public static Vector2d v2 = new Vector2d(-8.775, 64.25);
+    public static Vector2d v3 = new Vector2d(-8.775, 17.25);
+    public static Vector2d v4 = new Vector2d(-24, 17.25);
+    public static Vector2d v5 = new Vector2d(-24, 4);
+
+    public static Pose2d storage = new Pose2d(-40, 12, Math.toRadians(180));
+    public static Vector2d storagev = new Vector2d(-40, 12);
+
+    DcMotorEx linearSlide;
+
+    private DistanceSensor distanceSensor;
 
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        Pose2d start = new Pose2d(60, 36, Math.toRadians(180));
-        drive.setPoseEstimate(start);
+        distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
+        linearSlide = hardwareMap.get(DcMotorEx.class, "linearSlide");
 
-        Trajectory goToPolePreloaded = drive.trajectoryBuilder(start)
+        Pose2d current = new Pose2d(-32.275, 66.25, Math.toRadians(270));
+        drive.setPoseEstimate(current);
+
+        // SCORE PRELOADED CONE
+        Trajectory goToPolePreloaded1 = drive.trajectoryBuilder(current)
                 .lineToConstantHeading(v1)
-                .splineTo(v2, Math.toRadians(180))
+                .build();
+        Trajectory goToPolePreloaded2 = drive.trajectoryBuilder(goToPolePreloaded1.end())
+                .lineToConstantHeading(v2)
+                .build();
+        Trajectory goToPolePreloaded3 = drive.trajectoryBuilder(goToPolePreloaded2.end())
                 .lineToConstantHeading(v3)
                 .build();
-
-        Trajectory goToStorage = drive.trajectoryBuilder(goToPolePreloaded.end())
-                .splineTo(storage, Math.toRadians(90))
+        Trajectory goToPolePreloaded4 = drive.trajectoryBuilder(goToPolePreloaded3.end())
+                .lineToConstantHeading(v4)
+                .build();
+        Trajectory goToPolePreloaded5 = drive.trajectoryBuilder(goToPolePreloaded4.end())
+                .lineToConstantHeading(v5)
                 .build();
 
-        Trajectory goToHigh = drive.trajectoryBuilder(goToStorage.end())
-                .splineTo(high, Math.toRadians(180))
+        // RESET ORIGIN AFTER SCORE POLE SINCE ROBOT MAY HAVE HIT POLE AND RECORDED DIFFERENT DISTANCE FROM ROADRUNNER
+        current = goToPolePreloaded5.end();
+
+        // GO TO STORAGE AREA
+        Trajectory goToStorage1 = drive.trajectoryBuilder(current)
+                .lineToConstantHeading(new Vector2d(-24, 20))
                 .build();
+        Trajectory goToStorage2 = drive.trajectoryBuilder(goToStorage1.end().plus(new Pose2d(0, 0, Math.toRadians(-90))))
+//                .splineToSplineHeading(storage, Math.toRadians(splineTangent))
+                .lineToConstantHeading(storagev)
+                .build();
+
 
         waitForStart();
 
         while(opModeIsActive()) {
-//            linearSlide.setTargetPosition(-100);
-//            linearSlide.setPower(0.1);
+//            linearSlide.setTargetPosition(1000);
+//            linearSlide.setPower(0.6);
 //            linearSlide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
-            drive.followTrajectory(goToPolePreloaded);
-            drive.followTrajectory(goToStorage);
-            drive.followTrajectory(goToHigh);
+            drive.followTrajectory(goToPolePreloaded1);
+            drive.followTrajectory(goToPolePreloaded2);
+            drive.followTrajectory(goToPolePreloaded3);
+            drive.followTrajectory(goToPolePreloaded4);
+            drive.followTrajectory(goToPolePreloaded5);
+
+            drive.followTrajectory(goToStorage1);
+            drive.turn(Math.toRadians(-90));
+            drive.followTrajectory(goToStorage2);
+
+            telemetry.addData("range", String.format("%.01f inch", distanceSensor.getDistance(DistanceUnit.INCH)));
+            telemetry.update();
 
             break;
         }
