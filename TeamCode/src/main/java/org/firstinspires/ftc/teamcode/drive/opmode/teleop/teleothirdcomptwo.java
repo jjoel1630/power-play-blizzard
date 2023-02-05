@@ -1,14 +1,19 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.teleop;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Config
 @TeleOp(name="TeleOp 3rd Comp Part 2", group="Linear OpMode")
@@ -36,8 +41,14 @@ public class teleothirdcomptwo extends LinearOpMode {
     public static double CLAW_MIN = 0.75;
     public static double CLAW_MAX = 1.0;
 
+    private DistanceSensor distanceSensor;
+
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
+
 //        rightRear, leftRear, leftFront, rightFront
 //        rightFrontDrive = hardwareMap.get(DcMotorEx.class, "leftFront");
 //        leftBackDrive = hardwareMap.get(DcMotorEx.class, "leftRear");
@@ -77,6 +88,11 @@ public class teleothirdcomptwo extends LinearOpMode {
 
             clawPos = Range.clip(clawPos, CLAW_MIN, CLAW_MAX);
             claw.setPosition(clawPos);
+
+            if(clawPos == CLAW_MIN && distanceSensor.getDistance(DistanceUnit.INCH) <= 1.0) {
+                clawPos = CLAW_MAX;
+                claw.setPosition(clawPos);
+            }
 
             /* ---------------------- ROBOT MOVEMENT ---------------------- */
             double axialCoefficient = 1; // 0.53
@@ -193,9 +209,10 @@ public class teleothirdcomptwo extends LinearOpMode {
 //            }
 
             telemetry.addData("Leftfront power", leftFrontPower);
-            telemetry.addData("Leftback power", leftFrontPower);
-            telemetry.addData("RightFront power", leftFrontPower);
-            telemetry.addData("Rightback power", leftFrontPower);
+            telemetry.addData("Leftback power", leftBackPower);
+            telemetry.addData("RightFront power", rightFrontPower);
+            telemetry.addData("Rightback power", rightBackPower);
+            telemetry.addData("range", String.format("%.01f inch", distanceSensor.getDistance(DistanceUnit.INCH)));
             telemetry.addData("Slide pos", linearSlide.getCurrentPosition());
             telemetry.addData("Slide power", linearPower);
             telemetry.addData("Claw pos", claw.getPosition());
