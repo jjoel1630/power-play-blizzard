@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.opmode.teleop;
+package org.firstinspires.ftc.teamcode.drive.opmode.teleopm4;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -17,8 +17,8 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Config
-@TeleOp(name="TeleOp 3rd Comp Part 2", group="Linear OpMode")
-public class teleothirdcomptwo extends LinearOpMode {
+@TeleOp(name="TeleOp M4", group="Linear OpMode")
+public class TeleOpM4 extends LinearOpMode {
     private DcMotorEx leftFrontDrive = null;
     private DcMotorEx leftBackDrive = null;
     private DcMotorEx rightFrontDrive = null;

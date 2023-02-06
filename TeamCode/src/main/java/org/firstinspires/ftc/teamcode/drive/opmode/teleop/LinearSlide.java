@@ -17,6 +17,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
+@Disabled
 @Config
 @TeleOp(name="LinearSlide", group="Linear OpMode")
 public class LinearSlide extends LinearOpMode {

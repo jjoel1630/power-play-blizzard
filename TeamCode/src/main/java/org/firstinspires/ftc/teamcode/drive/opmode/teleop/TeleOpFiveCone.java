@@ -45,6 +45,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
+@Disabled
 @Config
 @TeleOp(name="TeleOp5Cone", group="Linear OpMode")
 public class TeleOpFiveCone extends LinearOpMode {
