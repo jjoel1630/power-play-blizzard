@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.drive.opmode.teleop;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -25,14 +26,14 @@ public class teleothirdcomptwo extends LinearOpMode {
 
     ElapsedTime timer;
 
-    public static int encoderTicksHigh = 20;
-    public static int encoderTicksMedium = 20;
-    public static int encoderTicksLow = 20;
+    public static int encoderTicksHigh = 3500;
+    public static int encoderTicksMedium = 2800;
+    public static int encoderTicksLow = 2000;
 
     public static double minDtPower = 0.4;
     public static double maxDtPower = 0.7;
 
-    public static double linearPowerTesting = 0.05;
+    public static double linearPowerTesting = 0.7;
 
     private DcMotorEx linearSlide = null;
 
@@ -42,12 +43,14 @@ public class teleothirdcomptwo extends LinearOpMode {
     public static double CLAW_MAX = 1.0;
 
     private DistanceSensor distanceSensor;
+    private RevColorSensorV3 colorSensor;
 
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
+        colorSensor = hardwareMap.get(RevColorSensorV3.class, "colorSensor");
 
 //        rightRear, leftRear, leftFront, rightFront
 //        rightFrontDrive = hardwareMap.get(DcMotorEx.class, "leftFront");
@@ -92,6 +95,10 @@ public class teleothirdcomptwo extends LinearOpMode {
             if(clawPos == CLAW_MIN && distanceSensor.getDistance(DistanceUnit.INCH) <= 1.0) {
                 clawPos = CLAW_MAX;
                 claw.setPosition(clawPos);
+
+                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                linearSlide.setPower(0.9);
+                linearSlide.setTargetPosition(2000);
             }
 
             /* ---------------------- ROBOT MOVEMENT ---------------------- */
@@ -212,7 +219,9 @@ public class teleothirdcomptwo extends LinearOpMode {
             telemetry.addData("Leftback power", leftBackPower);
             telemetry.addData("RightFront power", rightFrontPower);
             telemetry.addData("Rightback power", rightBackPower);
-            telemetry.addData("range", String.format("%.01f inch", distanceSensor.getDistance(DistanceUnit.INCH)));
+//            telemetry.addData("color sensor dist", colorSensor.getDistance(DistanceUnit.INCH));
+//            telemetry.addData("color sensor color", colorSensor.red());
+            telemetry.addData("distance sensor range", String.format("%.01f inch", distanceSensor.getDistance(DistanceUnit.INCH)));
             telemetry.addData("Slide pos", linearSlide.getCurrentPosition());
             telemetry.addData("Slide power", linearPower);
             telemetry.addData("Claw pos", claw.getPosition());

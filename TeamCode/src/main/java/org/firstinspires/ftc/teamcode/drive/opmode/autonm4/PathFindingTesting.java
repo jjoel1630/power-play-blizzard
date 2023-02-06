@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
@@ -35,6 +36,9 @@ public class PathFindingTesting extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
         linearSlide = hardwareMap.get(DcMotorEx.class, "linearSlide");
@@ -79,6 +83,12 @@ public class PathFindingTesting extends LinearOpMode {
 //            linearSlide.setPower(0.6);
 //            linearSlide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
+//            telemetry.addData("left", drive.leftFront.getCurrentPosition());
+//            telemetry.addData("right", drive.leftRear.getCurrentPosition());
+//            telemetry.addData("normal", drive.rightRear.getCurrentPosition());
+//            telemetry.addData("range", String.format("%.01f inch", distanceSensor.getDistance(DistanceUnit.INCH)));
+//            telemetry.update();
+
             drive.followTrajectory(goToPolePreloaded1);
             drive.followTrajectory(goToPolePreloaded2);
             drive.followTrajectory(goToPolePreloaded3);
@@ -91,8 +101,6 @@ public class PathFindingTesting extends LinearOpMode {
 
             telemetry.addData("range", String.format("%.01f inch", distanceSensor.getDistance(DistanceUnit.INCH)));
             telemetry.update();
-
-            break;
         }
     }
 }
