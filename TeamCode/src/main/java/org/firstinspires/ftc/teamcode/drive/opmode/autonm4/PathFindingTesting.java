@@ -16,16 +16,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
-@Autonomous(name="pathfinding testing")
+@Autonomous(name="Phase A Version 1")
 public class PathFindingTesting extends LinearOpMode {
     public static double splineTangent = 90;
     public static Vector2d v1 = new Vector2d(-32.275, 64.25);
-    public static Vector2d v2 = new Vector2d(-8.775, 64.25);
-    public static Vector2d v3 = new Vector2d(-8.775, 17.25);
+    public static Vector2d v2 = new Vector2d(-13.775, 64.25);
+    public static Vector2d v3 = new Vector2d(-13.775, 17.25);
     public static Vector2d v4 = new Vector2d(-24, 17.25);
-    public static Vector2d v5 = new Vector2d(-24, 4);
+    public static Vector2d v5 = new Vector2d(-24, 6);
 
-    public static Pose2d storage = new Pose2d(-40, 12, Math.toRadians(180));
+    public static Vector2d storage1 = new Vector2d(-24, 15.25);
+    public static Pose2d storage2 = new Pose2d(-40, 12, Math.toRadians(180));
     public static Vector2d storagev = new Vector2d(-40, 12);
 
     DcMotorEx linearSlide;
@@ -38,7 +39,7 @@ public class PathFindingTesting extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
         linearSlide = hardwareMap.get(DcMotorEx.class, "linearSlide");
@@ -68,11 +69,15 @@ public class PathFindingTesting extends LinearOpMode {
 
         // GO TO STORAGE AREA
         Trajectory goToStorage1 = drive.trajectoryBuilder(current)
-                .lineToConstantHeading(new Vector2d(-24, 20))
+                .lineToConstantHeading(storage1)
                 .build();
-        Trajectory goToStorage2 = drive.trajectoryBuilder(goToStorage1.end().plus(new Pose2d(0, 0, Math.toRadians(-90))))
+//        Trajectory goToStorage2 = drive.trajectoryBuilder(goToStorage1.end().plus(new Pose2d(0, 0, Math.toRadians(-90))))
+////                .splineToSplineHeading(storage, Math.toRadians(splineTangent))
+//                .lineToConstantHeading(storagev)
+//                .build();
+        Trajectory goToStorage2 = drive.trajectoryBuilder(goToStorage1.end())
 //                .splineToSplineHeading(storage, Math.toRadians(splineTangent))
-                .lineToConstantHeading(storagev)
+                .lineToLinearHeading(storage2)
                 .build();
 
 
@@ -96,11 +101,13 @@ public class PathFindingTesting extends LinearOpMode {
             drive.followTrajectory(goToPolePreloaded5);
 
             drive.followTrajectory(goToStorage1);
-            drive.turn(Math.toRadians(-90));
+//            drive.turn(Math.toRadians(-90));
             drive.followTrajectory(goToStorage2);
 
             telemetry.addData("range", String.format("%.01f inch", distanceSensor.getDistance(DistanceUnit.INCH)));
             telemetry.update();
+
+            break;
         }
     }
 }

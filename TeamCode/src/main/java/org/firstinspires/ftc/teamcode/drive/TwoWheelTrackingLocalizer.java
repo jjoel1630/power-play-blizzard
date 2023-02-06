@@ -34,17 +34,17 @@ import java.util.List;
  */
 public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public static double TICKS_PER_REV = 8192;
-    public static double WHEEL_RADIUS = 1.1811; // in
+    public static double WHEEL_RADIUS = 1.88976; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double PARALLEL_Y = 2.78125; // X is the up and down direction
-    public static double PARALLEL_X = 3.125; // Y is the strafe direction
+    public static double PARALLEL_Y = 0; // X is the up and down direction
+    public static double PARALLEL_X = 7.25; // Y is the strafe direction
 
-    public static double PERPENDICULAR_Y = -0.23125;
-    public static double PERPENDICULAR_X = 5.625;
+    public static double PERPENDICULAR_Y = 0.45;
+    public static double PERPENDICULAR_X = -6.5;
 
-    public static double X_MULTIPLIER = 1.00026; // Multiplier in the X direction
-    public static double Y_MULTIPLIER = 0.99994; // Multiplier in the Y direction
+    public static double X_MULTIPLIER = 1.0; // Multiplier in the X direction
+    public static double Y_MULTIPLIER = 1.0; // Multiplier in the Y direction
 
     // X MULTIPLIER
     // 82.92957949 --> 90 1/8
@@ -79,11 +79,12 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
         this.drive = drive;
 
-        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "parallelEncoder"));
-        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "perpendicularEncoder"));
+        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightFront"));
+        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightRear"));
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
 //        perpendicularEncoder.setDirection(Encoder.Direction.REVERSE);
+        parallelEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 
     public static double encoderTicksToInches(double ticks) {

@@ -119,7 +119,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         // and the placement of the dot/orientation from https://docs.revrobotics.com/rev-control-system/control-system-overview/dimensions#imu-location
         //
         // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
-         BNO055IMUUtil.remapZAxis(imu, AxisDirection.POS_Y);
+         BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
 
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
@@ -152,7 +152,8 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
-        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
+//        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
+        setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
 
         trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
     }
@@ -305,15 +306,19 @@ public class SampleMecanumDrive extends MecanumDrive {
         return imu.getAngularOrientation().firstAngle;
     }
 
+//    @Override
+//    public double getRawExternalHeading() {
+//        return 0;
+//    }
+
     @Override
     public double getRawExternalHeading() {
-        return 0;
+        return imu.getAngularOrientation().firstAngle;
     }
-
 
     @Override
     public Double getExternalHeadingVelocity() {
-        return (double) imu.getAngularVelocity().zRotationRate;
+        return (double) imu.getAngularVelocity().yRotationRate;
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {
