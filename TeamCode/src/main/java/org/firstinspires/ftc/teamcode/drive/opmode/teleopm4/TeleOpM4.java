@@ -92,14 +92,14 @@ public class TeleOpM4 extends LinearOpMode {
             clawPos = Range.clip(clawPos, CLAW_MIN, CLAW_MAX);
             claw.setPosition(clawPos);
 
-            if(clawPos == CLAW_MIN && distanceSensor.getDistance(DistanceUnit.INCH) <= 1.0) {
-                clawPos = CLAW_MAX;
-                claw.setPosition(clawPos);
-
-                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                linearSlide.setPower(0.9);
-                linearSlide.setTargetPosition(2000);
-            }
+//            if(clawPos == CLAW_MIN && distanceSensor.getDistance(DistanceUnit.INCH) <= 1.0) {
+//                clawPos = CLAW_MAX;
+//                claw.setPosition(clawPos);
+//
+//                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                linearSlide.setPower(0.9);
+//                linearSlide.setTargetPosition(2000);
+//            }
 
             /* ---------------------- ROBOT MOVEMENT ---------------------- */
             double axialCoefficient = 1; // 0.53

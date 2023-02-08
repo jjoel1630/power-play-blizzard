@@ -49,11 +49,11 @@ public class TrackWidthTuner extends LinearOpMode {
         telemetry.addLine("Running...");
         telemetry.update();
 
-        drive.setPoseEstimate(new Pose2d());
+//        drive.setPoseEstimate(new Pose2d());
 
         MovingStatistics trackWidthStats = new MovingStatistics(NUM_TRIALS);
         for (int i = 0; i < NUM_TRIALS; i++) {
-            // drive.setPoseEstimate(new Pose2d());
+             drive.setPoseEstimate(new Pose2d());
 
             // it is important to handle heading wraparounds
             double headingAccumulator = 0;
