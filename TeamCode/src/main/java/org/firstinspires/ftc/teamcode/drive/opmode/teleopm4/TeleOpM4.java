@@ -39,7 +39,7 @@ public class TeleOpM4 extends LinearOpMode {
 
     private Servo claw;
 
-    public static double CLAW_MIN = 0.75;
+    public static double CLAW_MIN = 0.80;
     public static double CLAW_MAX = 1.0;
 
     private DistanceSensor distanceSensor;

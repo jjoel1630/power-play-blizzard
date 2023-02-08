@@ -26,7 +26,7 @@ public class PathFindingTesting extends LinearOpMode {
     public static Vector2d v5 = new Vector2d(-24, 6);
 
     public static Vector2d storage1 = new Vector2d(-24, 16.25);
-    public static Pose2d storage2 = new Pose2d(-68, 13, Math.toRadians(180));
+    public static Pose2d storage2 = new Pose2d(-66.375, 13, Math.toRadians(180));
     public static Vector2d storagev = new Vector2d(-40, 12);
 
     DcMotorEx linearSlide;
