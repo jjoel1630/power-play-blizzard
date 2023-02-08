@@ -25,9 +25,9 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 @Config
 @Autonomous(group = "drive")
 public class TrackWidthTuner extends LinearOpMode {
-    public static double ANGLE = 180; // deg
-    public static int NUM_TRIALS = 5;
-    public static int DELAY = 1000; // ms
+    public static double ANGLE = 90; // deg
+    public static int NUM_TRIALS = 40;
+    public static int DELAY = 2000; // ms
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -49,9 +49,11 @@ public class TrackWidthTuner extends LinearOpMode {
         telemetry.addLine("Running...");
         telemetry.update();
 
+        drive.setPoseEstimate(new Pose2d());
+
         MovingStatistics trackWidthStats = new MovingStatistics(NUM_TRIALS);
         for (int i = 0; i < NUM_TRIALS; i++) {
-            drive.setPoseEstimate(new Pose2d());
+            // drive.setPoseEstimate(new Pose2d());
 
             // it is important to handle heading wraparounds
             double headingAccumulator = 0;
