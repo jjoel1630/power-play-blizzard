@@ -32,6 +32,9 @@ public class RedRight extends LinearOpMode {
     public static int strafeInches = 40;
     public static int forwardInches = 27;
 
+    Vector2d storage = new Vector2d(63.82, -12.2);
+    Pose2d storagep = new Pose2d(63.82, -12.2, 0);
+
 //    String webcamName = "Webcam 1";
 //    SleeveColorDetection sleeveDetection;
 //    OpenCvCamera camera;
@@ -53,7 +56,7 @@ public class RedRight extends LinearOpMode {
                 .build();
 
         TrajectorySequence goToStorage2 = drive.trajectorySequenceBuilder(new Pose2d(12.17, -20.49, Math.toRadians(45)))
-                .splineTo(new Vector2d(63.84, -12.62), Math.toRadians(0))
+                .splineTo(storage, Math.toRadians(0))
                 .build();
 
         TrajectorySequence scoreStorage1 = drive.trajectorySequenceBuilder(new Pose2d(63.84, -12.62, Math.toRadians(0)))
@@ -84,13 +87,13 @@ public class RedRight extends LinearOpMode {
                 .lineToConstantHeading(new Vector2d(59.68, -35.33))
                 .build();
 
-        TrajectorySequence onePathStorageScorev1 = drive.trajectorySequenceBuilder(new Pose2d(63.97, -11.75, Math.toRadians(0.00)))
+        TrajectorySequence onePathStorageScorev1 = drive.trajectorySequenceBuilder(storagep)
                 .lineToLinearHeading(new Pose2d(43.36, -13.69, Math.toRadians(0.00)))
                 .lineToLinearHeading(new Pose2d(28.56, -5.21, Math.toRadians(135.00)))
                 .build();
         TrajectorySequence onePathStorageGo1 = drive.trajectorySequenceBuilder(new Pose2d(28.56, -5.21, Math.toRadians(135.00)))
                 .lineToLinearHeading(new Pose2d(43.36, -13.69, Math.toRadians(0.00)))
-                .lineToLinearHeading(new Pose2d(63.97, -11.75, Math.toRadians(0.00)))
+                .lineToLinearHeading(storagep)
                 .build();
 
         /* ----------------------- CAMERA init ----------------------- */

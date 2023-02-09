@@ -40,7 +40,7 @@ public class MeepMeepRedRight {
                 .setDimensions(14.5, 14.0)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(12.17, -20.49, Math.toRadians(45)))
-                                .splineTo(new Vector2d(63.67, -11.75), Math.toRadians(0))
+                                .splineTo(new Vector2d(63.82, -12.2), Math.toRadians(0))
                                 .build());
 //
 //        // Score storage cone 1
@@ -54,15 +54,15 @@ public class MeepMeepRedRight {
 //                                .build());
 
         // Score storage cone in one try vfinal
-//        myBot = new DefaultBotBuilder(meepMeep)
-//                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-//                .setConstraints(24, 24, 3.71, Math.toRadians(184.02607784577722), 11.2)
-//                .setDimensions(14.5, 14.0)
-//                .followTrajectorySequence(drive ->
-//                        drive.trajectorySequenceBuilder(new Pose2d(63.97, -11.75, Math.toRadians(0.00)))
-//                                .lineToLinearHeading(new Pose2d(43.36, -13.69, Math.toRadians(0.00)))
-//                                .lineToLinearHeading(new Pose2d(28.56, -5.21, Math.toRadians(135.00)))
-//                                .build());
+        myBot = new DefaultBotBuilder(meepMeep)
+                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
+                .setConstraints(24, 24, 3.71, Math.toRadians(184.02607784577722), 11.2)
+                .setDimensions(14.5, 14.0)
+                .followTrajectorySequence(drive ->
+                        drive.trajectorySequenceBuilder(new Pose2d(63.97, -11.75, Math.toRadians(0.00)))
+                                .lineToLinearHeading(new Pose2d(43.36, -13.69, Math.toRadians(0.00)))
+                                .lineToLinearHeading(new Pose2d(28.56, -5.21, Math.toRadians(135.00)))
+                                .build());
 
         // Score storage cone in one try v1
         myBot = new DefaultBotBuilder(meepMeep)
