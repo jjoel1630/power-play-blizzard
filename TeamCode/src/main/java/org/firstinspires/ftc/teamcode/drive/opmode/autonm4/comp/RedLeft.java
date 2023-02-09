@@ -21,7 +21,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Config
-@Autonomous(name="Red Right")
+@Autonomous(name="Red Left")
 public class RedLeft extends LinearOpMode {
     private ElapsedTime timer;
 
