@@ -189,23 +189,27 @@ public class TeleOpM4 extends LinearOpMode {
                 linearPower = 0;
             }
 
-            if(gamepad2.x) {
-                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                linearSlide.setPower(linearPowerTesting);
-                linearSlide.setTargetPosition(encoderTicksHigh);
+            if(Math.abs(linearSlide.getCurrentPosition()) >= 4000 && !gamepad2.y) {
+                linearPower = 0;
             }
 
-            if(gamepad2.y) {
-                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                linearSlide.setPower(linearPowerTesting);
-                linearSlide.setTargetPosition(encoderTicksMedium);
-            }
-
-            if(gamepad2.a) {
-                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                linearSlide.setPower(linearPowerTesting);
-                linearSlide.setTargetPosition(encoderTicksLow);
-            }
+//            if(gamepad2.x) {
+//                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                linearSlide.setPower(linearPowerTesting);
+//                linearSlide.setTargetPosition(encoderTicksHigh);
+//            }
+//
+//            if(gamepad2.y) {
+//                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                linearSlide.setPower(linearPowerTesting);
+//                linearSlide.setTargetPosition(encoderTicksMedium);
+//            }
+//
+//            if(gamepad2.a) {
+//                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                linearSlide.setPower(linearPowerTesting);
+//                linearSlide.setTargetPosition(encoderTicksLow);
+//            }
 
             if(gamepad2.b) {
                 isDown = false;
