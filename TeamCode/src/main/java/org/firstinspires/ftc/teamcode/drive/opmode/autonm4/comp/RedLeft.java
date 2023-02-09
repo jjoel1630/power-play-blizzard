@@ -36,11 +36,22 @@ public class RedLeft extends LinearOpMode {
     SleeveColorDetection sleeveDetection;
     OpenCvCamera camera;
 
+    DcMotorEx linearSlide;
+    Servo claw;
+
+    public static double CLAW_MIN = 0.80;
+    public static double CLAW_MAX = 1.0;
+
     Vector2d storage = new Vector2d(-63.82, -12.2);
 
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+
+        linearSlide = hardwareMap.get(DcMotorEx.class, "linearSlide");
+        claw = hardwareMap.servo.get("claw");
+
+        double clawPos = CLAW_MAX;
 
         drive.setPoseEstimate(new Pose2d(-32.81, -64.87, Math.toRadians(90.00)));
 
@@ -126,6 +137,13 @@ public class RedLeft extends LinearOpMode {
         timer = new ElapsedTime();
 
         while(opModeIsActive()) {
+            linearSlide.setTargetPosition(500);
+            linearSlide.setPower(0.4);
+            linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            clawPos = Range.clip(clawPos, CLAW_MIN, CLAW_MAX);
+            claw.setPosition(clawPos);
+
             drive.followTrajectorySequence(scorePreloaded);
             drive.followTrajectorySequence(goToStorage1);
             drive.followTrajectorySequence(goToStorage2);

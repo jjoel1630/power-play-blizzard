@@ -129,20 +129,20 @@ public class BlueRight extends LinearOpMode {
             drive.followTrajectorySequence(scorePreloaded);
             drive.followTrajectorySequence(goToStorage1);
             drive.followTrajectorySequence(goToStorage2);
-//            drive.followTrajectorySequence(scoreStorage1);
-//            drive.followTrajectorySequence(scoreStorage2);
-//            drive.followTrajectorySequence(positionPark1);
-//            drive.followTrajectorySequence(positionPark2);
-            drive.followTrajectorySequence(onePathStorageScorev1);
-            drive.followTrajectorySequence(onePathStorageGo1);
+            drive.followTrajectorySequence(scoreStorage1);
+            drive.followTrajectorySequence(scoreStorage2);
+            drive.followTrajectorySequence(positionPark1);
+            drive.followTrajectorySequence(positionPark2);
+//            drive.followTrajectorySequence(onePathStorageScorev1);
+//            drive.followTrajectorySequence(onePathStorageGo1);
 
-//            if(POSITION == 0) {
-//                drive.followTrajectorySequence(park0);
-//            } else if(POSITION == 1) {
-//                drive.followTrajectorySequence(park1);
-//            } else if(POSITION == 2) {
-//                drive.followTrajectorySequence(park2);
-//            }
+            if(POSITION == 0) {
+                drive.followTrajectorySequence(park0);
+            } else if(POSITION == 1) {
+                drive.followTrajectorySequence(park1);
+            } else if(POSITION == 2) {
+                drive.followTrajectorySequence(park2);
+            }
 
             break;
         }
