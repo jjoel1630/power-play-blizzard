@@ -36,6 +36,8 @@ public class RedLeft extends LinearOpMode {
     SleeveColorDetection sleeveDetection;
     OpenCvCamera camera;
 
+    Vector2d storage = new Vector2d(-63.82, -12.2);
+
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -49,7 +51,7 @@ public class RedLeft extends LinearOpMode {
                 .build();
 
         TrajectorySequence goToStorage1 = drive.trajectorySequenceBuilder(new Pose2d(-19.00, -4.01, Math.toRadians(135)))
-                .lineToConstantHeading(new Vector2d(-12.17, -20.49))
+                .lineToConstantHeading(storage)
                 .build();
 
         TrajectorySequence goToStorage2 = drive.trajectorySequenceBuilder(new Pose2d(-12.17, -20.49, Math.toRadians(135)))
@@ -127,20 +129,20 @@ public class RedLeft extends LinearOpMode {
             drive.followTrajectorySequence(scorePreloaded);
             drive.followTrajectorySequence(goToStorage1);
             drive.followTrajectorySequence(goToStorage2);
-//            drive.followTrajectorySequence(scoreStorage1);
-//            drive.followTrajectorySequence(scoreStorage2);
-//            drive.followTrajectorySequence(positionPark1);
-//            drive.followTrajectorySequence(positionPark2);
-            drive.followTrajectorySequence(onePathStorageScorev1);
-            drive.followTrajectorySequence(onePathStorageGo1);
+            drive.followTrajectorySequence(scoreStorage1);
+            drive.followTrajectorySequence(scoreStorage2);
+            drive.followTrajectorySequence(positionPark1);
+            drive.followTrajectorySequence(positionPark2);
+//            drive.followTrajectorySequence(onePathStorageScorev1);
+//            drive.followTrajectorySequence(onePathStorageGo1);
 
-//            if(POSITION == 0) {
-//                drive.followTrajectorySequence(park0);
-//            } else if(POSITION == 1) {
-//                drive.followTrajectorySequence(park1);
-//            } else if(POSITION == 2) {
-//                drive.followTrajectorySequence(park2);
-//            }
+            if(POSITION == 0) {
+                drive.followTrajectorySequence(park0);
+            } else if(POSITION == 1) {
+                drive.followTrajectorySequence(park1);
+            } else if(POSITION == 2) {
+                drive.followTrajectorySequence(park2);
+            }
 
             break;
         }

@@ -33,6 +33,8 @@ public class BlueLeft extends LinearOpMode {
     SleeveColorDetection sleeveDetection;
     OpenCvCamera camera;
 
+    Vector2d storage = new Vector2d(63.82, 12.2);
+
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -45,12 +47,12 @@ public class BlueLeft extends LinearOpMode {
                 .splineTo(new Vector2d(-19.00, 4.01), Math.toRadians(225))
                 .build();
 
-        TrajectorySequence goToStorage1 = drive.trajectorySequenceBuilder(new Pose2d(-19.00, 4.01, Math.toRadians(234.00)))
+        TrajectorySequence goToStorage1 = drive.trajectorySequenceBuilder(new Pose2d(-19.00, 4.01, Math.toRadians(225)))
                 .lineToConstantHeading(new Vector2d(-12.17, 20.49))
                 .build();
 
-        TrajectorySequence goToStorage2 = drive.trajectorySequenceBuilder(new Pose2d(-12.17, 20.49, Math.toRadians(234.00)))
-                .splineToLinearHeading(new Pose2d(-63.84, 12.62, Math.toRadians(180.00)), Math.toRadians(193.50))
+        TrajectorySequence goToStorage2 = drive.trajectorySequenceBuilder(new Pose2d(-12.17, 20.49, Math.toRadians(225)))
+                .splineTo(storage, Math.toRadians(180))
                 .build();
 
         TrajectorySequence scoreStorage1 = drive.trajectorySequenceBuilder(new Pose2d(-63.84, 12.62, Math.toRadians(180.00)))
@@ -58,10 +60,10 @@ public class BlueLeft extends LinearOpMode {
                 .build();
 
         TrajectorySequence scoreStorage2 = drive.trajectorySequenceBuilder(new Pose2d(-8.31, 11.88, Math.toRadians(180.00)))
-                .lineToLinearHeading(new Pose2d(-19.60, 4.60, Math.toRadians(230.19)))
+                .lineToLinearHeading(new Pose2d(-19.60, 4.60, Math.toRadians(225)))
                 .build();
 
-        TrajectorySequence positionPark1 = drive.trajectorySequenceBuilder(new Pose2d(-19.60, 4.60, Math.toRadians(230.19)))
+        TrajectorySequence positionPark1 = drive.trajectorySequenceBuilder(new Pose2d(-19.60, 4.60, Math.toRadians(225)))
                 .lineToLinearHeading(new Pose2d(-11.58, 15.44, Math.toRadians(270.00)))
                 .build();
 

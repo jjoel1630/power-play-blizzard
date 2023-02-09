@@ -36,6 +36,8 @@ public class BlueRight extends LinearOpMode {
     SleeveColorDetection sleeveDetection;
     OpenCvCamera camera;
 
+    Vector2d storage = new Vector2d(63.82, 12.2);
+
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -53,7 +55,7 @@ public class BlueRight extends LinearOpMode {
                 .build();
 
         TrajectorySequence goToStorage2 = drive.trajectorySequenceBuilder(new Pose2d(12.17, 20.49, Math.toRadians(315)))
-                .splineTo(new Vector2d(63.84, 12.62), Math.toRadians(0))
+                .splineTo(storage, Math.toRadians(0))
                 .build();
 
         TrajectorySequence scoreStorage1 = drive.trajectorySequenceBuilder(new Pose2d(63.84, 12.62, Math.toRadians(0)))

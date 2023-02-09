@@ -82,8 +82,8 @@ public class MeepMeepRedRight {
                 .setDimensions(14.5, 14.0)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(28.56, -5.21, Math.toRadians(135.00)))
-                                .lineToLinearHeading(new Pose2d(43.36, -13.69, Math.toRadians(0.00)))
-                                .lineToLinearHeading(new Pose2d(63.97, -11.75, Math.toRadians(0.00)))
+                                .lineToConstantHeading(new Vector2d(34.81, -15.32))
+                                .lineToLinearHeading(new Pose2d(63.52, -11.90, Math.toRadians(0.00)))
                                 .build());
 
 

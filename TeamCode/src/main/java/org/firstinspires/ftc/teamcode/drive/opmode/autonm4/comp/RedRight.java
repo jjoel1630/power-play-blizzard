@@ -33,7 +33,7 @@ public class RedRight extends LinearOpMode {
     public static int forwardInches = 27;
 
     Vector2d storage = new Vector2d(63.82, -12.2);
-    Pose2d storagep = new Pose2d(63.82, -12.2, 0);
+    Pose2d storagep = new Pose2d(63.52, -11.90, 0);
 
 //    String webcamName = "Webcam 1";
 //    SleeveColorDetection sleeveDetection;
@@ -92,8 +92,8 @@ public class RedRight extends LinearOpMode {
                 .lineToLinearHeading(new Pose2d(28.56, -5.21, Math.toRadians(135.00)))
                 .build();
         TrajectorySequence onePathStorageGo1 = drive.trajectorySequenceBuilder(new Pose2d(28.56, -5.21, Math.toRadians(135.00)))
-                .lineToLinearHeading(new Pose2d(43.36, -13.69, Math.toRadians(0.00)))
-                .lineToLinearHeading(storagep)
+                .lineToConstantHeading(new Vector2d(34.81, -15.32))
+                .lineToLinearHeading(new Pose2d(63.52, -11.90, Math.toRadians(0.00)))
                 .build();
 
         /* ----------------------- CAMERA init ----------------------- */
@@ -130,20 +130,20 @@ public class RedRight extends LinearOpMode {
             drive.followTrajectorySequence(scorePreloaded);
             drive.followTrajectorySequence(goToStorage1);
             drive.followTrajectorySequence(goToStorage2);
-//            drive.followTrajectorySequence(scoreStorage1);
-//            drive.followTrajectorySequence(scoreStorage2);
-//            drive.followTrajectorySequence(positionPark1);
-//            drive.followTrajectorySequence(positionPark2);
-            drive.followTrajectorySequence(onePathStorageScorev1);
-            drive.followTrajectorySequence(onePathStorageGo1);
+            drive.followTrajectorySequence(scoreStorage1);
+            drive.followTrajectorySequence(scoreStorage2);
+            drive.followTrajectorySequence(positionPark1);
+            drive.followTrajectorySequence(positionPark2);
+//            drive.followTrajectorySequence(onePathStorageScorev1);
+//            drive.followTrajectorySequence(onePathStorageGo1);
 
-//            if(POSITION == 0) {
-//                drive.followTrajectorySequence(park0);
-//            } else if(POSITION == 1) {
-//                drive.followTrajectorySequence(park1);
-//            } else if(POSITION == 2) {
-//                drive.followTrajectorySequence(park2);
-//            }
+            if(POSITION == 0) {
+                drive.followTrajectorySequence(park0);
+            } else if(POSITION == 1) {
+                drive.followTrajectorySequence(park1);
+            } else if(POSITION == 2) {
+                drive.followTrajectorySequence(park2);
+            }
 
             break;
         }
