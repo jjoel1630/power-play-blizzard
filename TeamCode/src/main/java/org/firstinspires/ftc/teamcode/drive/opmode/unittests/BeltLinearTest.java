@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.opmode.autonm4.comp;
+package org.firstinspires.ftc.teamcode.drive.opmode.unittests;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -23,8 +23,8 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Config
-@Autonomous(name="Red Right")
-public class RedRight extends LinearOpMode {
+@Autonomous(name="Belt Linear Test")
+public class BeltLinearTest extends LinearOpMode {
     private ElapsedTime timer;
 
     public int POSITION = 1;
@@ -163,21 +163,6 @@ public class RedRight extends LinearOpMode {
                 while(timer.seconds() <= time) {}
                 linearSlide.setPower(0);
             }
-
-
-//            drive.followTrajectorySequence(scorePreloaded);
-//
-//            drive.followTrajectorySequence(positionPark1);
-//            drive.followTrajectorySequence(positionPark2);
-//
-//            if(POSITION == 0) {
-//                drive.followTrajectorySequence(park0);
-//            } else if(POSITION == 1) {
-//                drive.followTrajectorySequence(park1);
-//            } else if(POSITION == 2) {
-//                drive.followTrajectorySequence(park2);
-//            }
-//
 
             break;
         }

@@ -17,134 +17,61 @@ public class MeepMeepRedRight {
                 .setConstraints(24, 24, 3.71, Math.toRadians(184.02607784577722), 11.2)
                 .setDimensions(14.5, 14.0)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(32.81, -64.87, Math.toRadians(90.00)))
-                                .splineToConstantHeading(new Vector2d(12.62, -53.59), Math.toRadians(90.00))
-                                .splineTo(new Vector2d(12.62, -17.52), Math.toRadians(90.00))
-                                .splineTo(new Vector2d(19.00, -4.01), Math.toRadians(45.00))
+                        drive.trajectorySequenceBuilder(new Pose2d(-39, -64.87, Math.toRadians(90.00)))
+                                .splineToConstantHeading(new Vector2d(-12.62, -53.59), Math.toRadians(90.00))
+                                .splineTo(new Vector2d(-12.62, -17.52), Math.toRadians(90.00))
+                                .splineTo(new Vector2d(-19.00, -5.5), Math.toRadians(135))
                                 .build());
 
-        // Go to storage 1
-        myBot = new DefaultBotBuilder(meepMeep)
-                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(24, 24, 3.71, Math.toRadians(184.02607784577722), 11.2)
-                .setDimensions(14.5, 14.0)
-                .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(19.00, -4.01, Math.toRadians(45.00)))
-                                .lineToConstantHeading(new Vector2d(12.17, -20.49))
-                                .build());
-//
-//        // Go to storage 2
-        myBot = new DefaultBotBuilder(meepMeep)
-                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(24, 24, 3.71, Math.toRadians(184.02607784577722), 11.2)
-                .setDimensions(14.5, 14.0)
-                .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(12.17, -20.49, Math.toRadians(45)))
-                                .splineTo(new Vector2d(63.82, -12.2), Math.toRadians(0))
-                                .build());
-//
-//        // Score storage cone 1
+
 //        myBot = new DefaultBotBuilder(meepMeep)
 //                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
 //                .setConstraints(24, 24, 3.71, Math.toRadians(184.02607784577722), 11.2)
 //                .setDimensions(14.5, 14.0)
 //                .followTrajectorySequence(drive ->
-//                        drive.trajectorySequenceBuilder(new Pose2d(63.84, -12.62, Math.toRadians(0)))
-//                                .lineToLinearHeading(new Pose2d(8.31, -11.88, Math.toRadians(0)))
-//                                .build());
-
-        // Score storage cone in one try vfinal
-        myBot = new DefaultBotBuilder(meepMeep)
-                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(24, 24, 3.71, Math.toRadians(184.02607784577722), 11.2)
-                .setDimensions(14.5, 14.0)
-                .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(63.97, -11.75, Math.toRadians(0.00)))
-                                .lineToLinearHeading(new Pose2d(43.36, -13.69, Math.toRadians(0.00)))
-                                .lineToLinearHeading(new Pose2d(28.56, -5.21, Math.toRadians(135.00)))
-                                .build());
-
-        // Score storage cone in one try v1
-        myBot = new DefaultBotBuilder(meepMeep)
-                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(24, 24, 3.71, Math.toRadians(184.02607784577722), 11.2)
-                .setDimensions(14.5, 14.0)
-                .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(63.97, -11.75, Math.toRadians(0)))
-                                .lineToLinearHeading(new Pose2d(43.36, -13.69, Math.toRadians(0)))
-                                .lineToLinearHeading(new Pose2d(28.56, -5.21, Math.toRadians(135)))
-                                .build());
-
-//        // Go to storage cone in one try vfinal
-        myBot = new DefaultBotBuilder(meepMeep)
-                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(24, 24, 3.71, Math.toRadians(184.02607784577722), 11.2)
-                .setDimensions(14.5, 14.0)
-                .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(28.56, -5.21, Math.toRadians(135.00)))
-                                .lineToConstantHeading(new Vector2d(34.81, -15.32))
-                                .lineToLinearHeading(new Pose2d(63.52, -11.90, Math.toRadians(0.00)))
-                                .build());
-
-
-        // Score storage cone 2
-//        myBot = new DefaultBotBuilder(meepMeep)
-//                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-//                .setConstraints(24, 24, 3.71, Math.toRadians(184.02607784577722), 11.2)
-//                .setDimensions(14.5, 14.0)
-//                .followTrajectorySequence(drive ->
-//                        drive.trajectorySequenceBuilder(new Pose2d(8.31, -11.88, Math.toRadians(0)))
-//                                .lineToLinearHeading(new Pose2d(19.60, -4.60, Math.toRadians(45)))
-//                                .build());
-//
-//        // Position park 1
-//        myBot = new DefaultBotBuilder(meepMeep)
-//                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-//                .setConstraints(24, 24, 3.71, Math.toRadians(184.02607784577722), 11.2)
-//                .setDimensions(14.5, 14.0)
-//                .followTrajectorySequence(drive ->
-//                        drive.trajectorySequenceBuilder(new Pose2d(19.60, -4.60, Math.toRadians(45)))
-//                                .lineToLinearHeading(new Pose2d(11.58, -15.44, Math.toRadians(90)))
-//                                .build());
-//
-////      Position park 2
-//        myBot = new DefaultBotBuilder(meepMeep)
-//                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-//                .setConstraints(24, 24, 3.71, Math.toRadians(184.02607784577722), 11.2)
-//                .setDimensions(14.5, 14.0)
-//                .followTrajectorySequence(drive ->
-//                        drive.trajectorySequenceBuilder(new Pose2d(11.58, -15.44, Math.toRadians(90)))
-//                                .lineToLinearHeading(new Pose2d(12.62, -35.93, Math.toRadians(180)))
+//                        drive.trajectorySequenceBuilder(new Pose2d(-19.89, 4.45, Math.toRadians(135.00)))
+//                                .lineToConstantHeading(new Vector2d(-11.88, 11.28))
 //                                .build());
 ////
-////        // Park for index 0
 //        myBot = new DefaultBotBuilder(meepMeep)
 //                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
 //                .setConstraints(24, 24, 3.71, Math.toRadians(184.02607784577722), 11.2)
 //                .setDimensions(14.5, 14.0)
 //                .followTrajectorySequence(drive ->
-//                        drive.trajectorySequenceBuilder(new Pose2d(12.62, -35.93, Math.toRadians(180)))
-//                                .turn(Math.toRadians(90))
+//                        drive.trajectorySequenceBuilder(new Pose2d(-11.88, -11.28, Math.toRadians(135)))
+//                                .lineToLinearHeading(new Pose2d(-12.92, -36.15, Math.toRadians(90.00)))
+//                                .turn(Math.toRadians(-90))
 //                                .build());
-////
-////        // Park for index 1
+//
+//
+//////        // Park for index 0
 //        myBot = new DefaultBotBuilder(meepMeep)
 //                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
 //                .setConstraints(24, 24, 3.71, Math.toRadians(184.02607784577722), 11.2)
 //                .setDimensions(14.5, 14.0)
 //                .followTrajectorySequence(drive ->
-//                        drive.trajectorySequenceBuilder(new Pose2d(12.62, -35.93, Math.toRadians(180)))
-//                                .lineToConstantHeading(new Vector2d(36.22, -35.63))
+//                        drive.trajectorySequenceBuilder(new Pose2d(-12.92, -36.15, Math.toRadians(0)))
+//                                .turn(Math.toRadians(-90))
 //                                .build());
-////
-////        // Park for index 2
+////////
+////////        // Park for index 1
 //        myBot = new DefaultBotBuilder(meepMeep)
 //                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
 //                .setConstraints(24, 24, 3.71, Math.toRadians(184.02607784577722), 11.2)
 //                .setDimensions(14.5, 14.0)
 //                .followTrajectorySequence(drive ->
-//                        drive.trajectorySequenceBuilder(new Pose2d(12.62, -35.93, Math.toRadians(180)))
-//                                .lineToConstantHeading(new Vector2d(59.68, -35.33))
+//                        drive.trajectorySequenceBuilder(new Pose2d(-12.92, -36.15, Math.toRadians(0)))
+//                                .lineToConstantHeading(new Vector2d(-36.22, -36.15))
+//                                .build());
+//////
+//////        // Park for index 2
+//        myBot = new DefaultBotBuilder(meepMeep)
+//                // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
+//                .setConstraints(24, 24, 3.71, Math.toRadians(184.02607784577722), 11.2)
+//                .setDimensions(14.5, 14.0)
+//                .followTrajectorySequence(drive ->
+//                        drive.trajectorySequenceBuilder(new Pose2d(-12.92, -36.15, Math.toRadians(0)))
+//                                .lineToConstantHeading(new Vector2d(-59.68, -36.15))
 //                                .build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_OFFICIAL)

@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Disabled
 @Config
 @Autonomous(name="Move Linear Slide")
 public class MoveLinearSlide extends LinearOpMode {
@@ -22,13 +21,16 @@ public class MoveLinearSlide extends LinearOpMode {
     public static double KI = 0.0;
     public static double KD = 0.0;
 
+    public static double ticks = 2260;
+    public static double time = 5;
+
     public static int numTimes = 15;
 
     private ElapsedTime timer;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        slide = hardwareMap.get(DcMotorEx.class, "linearSlideRight");
+        slide = hardwareMap.get(DcMotorEx.class, "linearSlide");
 
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -68,17 +70,19 @@ public class MoveLinearSlide extends LinearOpMode {
 //
 //            telemetry.update();
             for (int i = 0; i <= numTimes; ++i) {
-                while(slide.getCurrentPosition() <= 2260) {
+                while(slide.getCurrentPosition() <= ticks) {
                     slide.setPower(1.0);
                     telemetry.addLine("position: " + slide.getCurrentPosition());
                     telemetry.update();
                 }
 
                 timer.reset();
-                while(timer.seconds() <= 1.5) {}
+                while(timer.seconds() <= time) {}
 
                 while(slide.getCurrentPosition() >= 0) {
                     slide.setPower(-1.0);
+                    telemetry.addLine("position: " + slide.getCurrentPosition());
+                    telemetry.update();
                 }
             }
         }

@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -19,44 +20,48 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 @Config
 @TeleOp(name="TeleOp M4", group="Linear OpMode")
 public class TeleOpM4 extends LinearOpMode {
+    /* MOTOR AND SERVO CONFIGS + OTHER INITS */
     private DcMotorEx leftFrontDrive = null;
     private DcMotorEx leftBackDrive = null;
     private DcMotorEx rightFrontDrive = null;
     private DcMotorEx rightBackDrive = null;
 
-    ElapsedTime timer;
-
-    public static int encoderTicksHigh = 3500;
-    public static int encoderTicksMedium = 2800;
-    public static int encoderTicksLow = 2000;
-
-    public static double minDtPower = 0.4;
-    public static double maxDtPower = 0.7;
-
-    public static double linearPowerTesting = 0.7;
-
     private DcMotorEx linearSlide = null;
 
     private Servo claw;
 
-    public static double CLAW_MIN = 0.80;
-    public static double CLAW_MAX = 1.0;
-
     private DistanceSensor distanceSensor;
     private RevColorSensorV3 colorSensor;
+    private TouchSensor touchSensor;
+
+    ElapsedTime timer;
+
+    /* LINEAR SLIDE VALUES */
+    public static int encoderTicksHigh = 3500;
+    public static int encoderTicksMedium = 2800;
+    public static int encoderTicksLow = 2000;
+
+    public static double linSlideMax = 4000;
+    public static double linSlideMin = 10;
+
+    public static double linearPowerTesting = 0.7;
+
+    /* DRIVETRAIN VALUES */
+    public static double minDtPower = 0.4;
+    public static double maxDtPower = 0.7;
+
+    /* CLAW VALUES */
+    public static double CLAW_MIN = 0.5;
+    public static double CLAW_MAX = 1.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
-        colorSensor = hardwareMap.get(RevColorSensorV3.class, "colorSensor");
+//        distanceSensor = hardwareMap.get(DistanceSensor.class, "distanceSensor");
+//        colorSensor = hardwareMap.get(RevColorSensorV3.class, "colorSensor");
+//        touchSensor = hardwareMap.get(TouchSensor.class, "touchSensor");
 
-//        rightRear, leftRear, leftFront, rightFront
-//        rightFrontDrive = hardwareMap.get(DcMotorEx.class, "leftFront");
-//        leftBackDrive = hardwareMap.get(DcMotorEx.class, "leftRear");
-//        leftFrontDrive = hardwareMap.get(DcMotorEx.class, "rightFront");
-//        rightBackDrive = hardwareMap.get(DcMotorEx.class, "rightRear");
         leftFrontDrive = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftBackDrive = hardwareMap.get(DcMotorEx.class, "leftRear");
         rightFrontDrive = hardwareMap.get(DcMotorEx.class, "rightFront");
@@ -96,9 +101,18 @@ public class TeleOpM4 extends LinearOpMode {
 //                clawPos = CLAW_MAX;
 //                claw.setPosition(clawPos);
 //
-//                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                linearSlide.setPower(0.9);
 //                linearSlide.setTargetPosition(2000);
+//                linearSlide.setPower(0.9);
+//                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            }
+
+//            if(touchSensor.isPressed() && clawPos == CLAW_MIN && linearSlide.getCurrentPosition() <= 500) {
+//                clawPos = CLAW_MAX;
+//                claw.setPosition(clawPos);
+//
+//                linearSlide.setTargetPosition(2000);
+//                linearSlide.setPower(0.9);
+//                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //            }
 
             /* ---------------------- ROBOT MOVEMENT ---------------------- */
@@ -176,22 +190,30 @@ public class TeleOpM4 extends LinearOpMode {
 
             if(gamepad2.left_bumper) linearSlowModeOn = true;
 
-            if(!linearSlide.isBusy()) linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            if(!linearSlide.isBusy()) linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
             double linearAxial = gamepad2.left_stick_y;
             linearAxial = linearAxial * 1;
 
             double linearPowerModifier = linearSlowModeOn ? 0.1 : 0.75;
-//            double linearPowerModifier = linearPowerTesting;
             double linearPower = linearAxial * linearPowerModifier;
 
-            if(linearSlide.getCurrentPosition() <= 10 && isDown) {
+//            if(linearSlide.getCurrentPosition() <= linSlideMin && isDown) {
+//                linearPower = 0;
+//
+//                telemetry.addLine("slide is min");
+//                telemetry.update();
+//            }
+
+            if((Math.abs(linearSlide.getCurrentPosition()) >= linSlideMax || -1*linearSlide.getCurrentPosition() <= 10) && !gamepad2.y) {
                 linearPower = 0;
+
+                telemetry.addLine("slide is max");
+                telemetry.update();
             }
 
-            if(Math.abs(linearSlide.getCurrentPosition()) >= 4000 && !gamepad2.y) {
-                linearPower = 0;
-            }
+            if(gamepad2.b) isDown = false;
+            if(gamepad2.right_bumper) isDown = true;
 
 //            if(gamepad2.x) {
 //                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -211,13 +233,8 @@ public class TeleOpM4 extends LinearOpMode {
 //                linearSlide.setTargetPosition(encoderTicksLow);
 //            }
 
-            if(gamepad2.b) {
-                isDown = false;
-            }
 
-//            if(gamepad2.right_bumper) {
-//                isDown = true;
-//            }
+            linearSlide.setPower(linearPower);
 
             telemetry.addData("Leftfront power", leftFrontPower);
             telemetry.addData("Leftback power", leftBackPower);
@@ -225,13 +242,13 @@ public class TeleOpM4 extends LinearOpMode {
             telemetry.addData("Rightback power", rightBackPower);
 //            telemetry.addData("color sensor dist", colorSensor.getDistance(DistanceUnit.INCH));
 //            telemetry.addData("color sensor color", colorSensor.red());
-            telemetry.addData("distance sensor range", String.format("%.01f inch", distanceSensor.getDistance(DistanceUnit.INCH)));
+//            telemetry.addData("distance sensor range", String.format("%.01f inch", distanceSensor.getDistance(DistanceUnit.INCH)));
+//            telemetry.addData("isPressed", touchSensor.isPressed());
+//            telemetry.addData("touch sensor value", touchSensor.getValue());
             telemetry.addData("Slide pos", linearSlide.getCurrentPosition());
             telemetry.addData("Slide power", linearPower);
             telemetry.addData("Claw pos", claw.getPosition());
             telemetry.update();
-
-            linearSlide.setPower(linearPower);
         }
     }
 }

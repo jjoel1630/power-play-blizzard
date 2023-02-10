@@ -12,7 +12,7 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 @Config
-public class SleeveColorDetection extends OpenCvPipeline {
+public class SleeveDetectionLeft extends OpenCvPipeline {
     // 0 for left, 1 for center, 2 for right
     private int position = 1;
 
