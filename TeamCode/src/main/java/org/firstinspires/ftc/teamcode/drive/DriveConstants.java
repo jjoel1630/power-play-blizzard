@@ -49,7 +49,7 @@ public class DriveConstants {
 
     public static double WHEEL_RADIUS = 1.88976; // in
     public static double GEAR_RATIO = 1.0; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 11.20; // in
+    public static double TRACK_WIDTH = 12.23; // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -61,7 +61,7 @@ public class DriveConstants {
 //    public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
     public static double kV = 0.015813;
     public static double kA = 0.00235;
-    public static double kStatic = 0.0899;
+    public static double kStatic = 0.09;
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
@@ -95,7 +95,7 @@ public class DriveConstants {
     // 90% of the remaining...30 inches / sec
     public static double MAX_VEL = 24;
     public static double MAX_ACCEL = 24;
-    public static double MAX_ANG_VEL = 3.71;
+    public static double MAX_ANG_VEL = 4.9;
     public static double MAX_ANG_ACCEL = Math.toRadians(184.02607784577722);
 
 

@@ -27,16 +27,16 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 public class RedRight extends LinearOpMode {
     private ElapsedTime timer;
 
-    public int POSITION = 1;
+    public static int POSITION = 1;
 
     public int strafeInches = 40;
     public int forwardInches = 27;
 
-    public static int ticks = 50;
-    public static int initticks = 50;
-    public static double time = 5;
-    public static int numTimes = 10;
-    public static double pwr = 0.8;
+    public int ticks = 50;
+    public int initticks = 50;
+    public double time = 5;
+    public int numTimes = 10;
+    public double pwr = 0.8;
 
     Vector2d storage = new Vector2d(63.82, -12.2);
     Pose2d storagep = new Pose2d(63.52, -11.90, 0);
@@ -113,71 +113,71 @@ public class RedRight extends LinearOpMode {
         });
 
         /* ----------------------- GET POSITION ----------------------- */
-        while (!isStarted()) {
-            telemetry.addData("ROTATION: ", sleeveDetection.getParkPosition());
-            telemetry.update();
-
-            POSITION = sleeveDetection.getParkPosition();
-        }
+//        while (!isStarted()) {
+//            telemetry.addData("ROTATION: ", sleeveDetection.getParkPosition());
+//            telemetry.update();
+//
+//            POSITION = sleeveDetection.getParkPosition();
+//        }
 
         waitForStart();
 
         timer = new ElapsedTime();
 
         while(opModeIsActive()) {
-            for(int i = 0; i < numTimes; ++i) {
-                linearSlide.setTargetPosition(ticks);
-                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                linearSlide.setPower(pwr);
+//            for(int i = 0; i < numTimes; ++i) {
+//                linearSlide.setTargetPosition(ticks);
+//                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                linearSlide.setPower(pwr);
+//
+//                telemetry.addData("pos: ", linearSlide.getCurrentPosition());
+//                telemetry.update();
+//
+//                while(linearSlide.isBusy()) {}
+//                timer.reset();
+//                while(timer.seconds() <= time) {}
+//                linearSlide.setPower(0);
+//
+//                int t = (int) ticks/2;
+//                linearSlide.setTargetPosition(t);
+//                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                linearSlide.setPower(pwr);
+//
+//                telemetry.addData("pos: ", linearSlide.getCurrentPosition());
+//                telemetry.update();
+//
+//                while(linearSlide.isBusy()) {}
+//                timer.reset();
+//                while(timer.seconds() <= time) {}
+//                linearSlide.setPower(0);
+//
+//                linearSlide.setTargetPosition(initticks);
+//                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                linearSlide.setPower(pwr);
+//
+//                telemetry.addData("pos: ", linearSlide.getCurrentPosition());
+//                telemetry.update();
+//
+//                while(linearSlide.isBusy()) {}
+//                timer.reset();
+//                while(timer.seconds() <= time) {}
+//                linearSlide.setPower(0);
+//            }
 
-                telemetry.addData("pos: ", linearSlide.getCurrentPosition());
-                telemetry.update();
 
-                while(linearSlide.isBusy()) {}
-                timer.reset();
-                while(timer.seconds() <= time) {}
-                linearSlide.setPower(0);
+            drive.followTrajectorySequence(scorePreloaded);
 
-                int t = (int) ticks/2;
-                linearSlide.setTargetPosition(t);
-                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                linearSlide.setPower(pwr);
+            drive.followTrajectorySequence(positionPark1);
+            drive.followTrajectorySequence(positionPark2);
 
-                telemetry.addData("pos: ", linearSlide.getCurrentPosition());
-                telemetry.update();
-
-                while(linearSlide.isBusy()) {}
-                timer.reset();
-                while(timer.seconds() <= time) {}
-                linearSlide.setPower(0);
-
-                linearSlide.setTargetPosition(initticks);
-                linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                linearSlide.setPower(pwr);
-
-                telemetry.addData("pos: ", linearSlide.getCurrentPosition());
-                telemetry.update();
-
-                while(linearSlide.isBusy()) {}
-                timer.reset();
-                while(timer.seconds() <= time) {}
-                linearSlide.setPower(0);
+            if(POSITION == 0) {
+                drive.followTrajectorySequence(park0);
+            } else if(POSITION == 1) {
+                drive.followTrajectorySequence(park1);
+            } else if(POSITION == 2) {
+                drive.followTrajectorySequence(park2);
             }
 
-
-//            drive.followTrajectorySequence(scorePreloaded);
-//
-//            drive.followTrajectorySequence(positionPark1);
-//            drive.followTrajectorySequence(positionPark2);
-//
-//            if(POSITION == 0) {
-//                drive.followTrajectorySequence(park0);
-//            } else if(POSITION == 1) {
-//                drive.followTrajectorySequence(park1);
-//            } else if(POSITION == 2) {
-//                drive.followTrajectorySequence(park2);
-//            }
-//
 
             break;
         }

@@ -45,6 +45,7 @@ public class TeleOpM4 extends LinearOpMode {
     public static double linSlideMin = 10;
 
     public static double linearPowerTesting = 0.7;
+    public static double linearMaxPower = 0.9;
 
     /* DRIVETRAIN VALUES */
     public static double minDtPower = 0.4;
@@ -195,7 +196,7 @@ public class TeleOpM4 extends LinearOpMode {
             double linearAxial = gamepad2.left_stick_y;
             linearAxial = linearAxial * 1;
 
-            double linearPowerModifier = linearSlowModeOn ? 0.1 : 0.75;
+            double linearPowerModifier = linearSlowModeOn ? 0.1 : linearMaxPower;
             double linearPower = linearAxial * linearPowerModifier;
 
 //            if(linearSlide.getCurrentPosition() <= linSlideMin && isDown) {
@@ -205,8 +206,9 @@ public class TeleOpM4 extends LinearOpMode {
 //                telemetry.update();
 //            }
 
-            if((Math.abs(linearSlide.getCurrentPosition()) >= linSlideMax || -1*linearSlide.getCurrentPosition() <= 10) && !gamepad2.y) {
-                linearPower = 0;
+//            if((Math.abs(linearSlide.getCurrentPosition()) >= linSlideMax || -1*linearSlide.getCurrentPosition() <= 10) && !gamepad2.y) {
+            if((Math.abs(linearSlide.getCurrentPosition()) >= linSlideMax) && !gamepad2.y) {
+                    linearPower = 0;
 
                 telemetry.addLine("slide is max");
                 telemetry.update();
