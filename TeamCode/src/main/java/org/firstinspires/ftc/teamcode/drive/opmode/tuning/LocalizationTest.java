@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.tuning;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -16,12 +17,18 @@ import java.util.ArrayList;
  * exercise is to ascertain whether the localizer has been configured properly (note: the pure
  * encoder localizer heading may be significantly off if the track width has not been tuned).
  */
+
+@Config
 @TeleOp(group = "drive")
 public class LocalizationTest extends LinearOpMode {
     boolean checkIfSame(int pos1, int pos2, int pos3, double[] f) {
         if(f[0] == pos1 && f[1] == pos2 && f[2] == pos3) return false;
         return true;
     }
+
+    public static double startx = 0;
+    public static double starty = 0;
+    public static double startheading = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -30,7 +37,7 @@ public class LocalizationTest extends LinearOpMode {
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 //        Pose2d startPose = new Pose2d(36, -60, Math.toRadians(90));
-        Pose2d startPose = new Pose2d(0,0, 0);
+        Pose2d startPose = new Pose2d(startx,starty, Math.toRadians(startheading));
 
         drive.setPoseEstimate(startPose);
 

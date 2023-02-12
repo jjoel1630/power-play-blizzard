@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.opmode.autonm4.comp;
+package org.firstinspires.ftc.teamcode.drive.opmode.autonm4.updatedcomp;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -24,8 +24,8 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Config
-@Autonomous(name="Red Left")
-public class RedLeft extends LinearOpMode {
+@Autonomous(name="LeftSideUpdated")
+public class LeftSideUpdated extends LinearOpMode {
     private ElapsedTime timer;
 
     public static int POSITION = 1;
@@ -59,16 +59,18 @@ public class RedLeft extends LinearOpMode {
 
         drive.setPoseEstimate(new Pose2d(-32.81, -64.87, Math.toRadians(90.00)));
 
-        TrajectorySequence park2 = drive.trajectorySequenceBuilder(new Pose2d(-12.92, -36.15, Math.toRadians(0)))
-                .turn(Math.toRadians(-90))
+        TrajectorySequence park2 = drive.trajectorySequenceBuilder(new Pose2d(-32.81, -64.87, Math.toRadians(90)))
+                .lineToConstantHeading(new Vector2d(-32.81, -35.87))
+                .lineToConstantHeading(new Vector2d(-53.81, -35.87))
                 .build();
 
-        TrajectorySequence park1 = drive.trajectorySequenceBuilder(new Pose2d(-12.92, -36.15, Math.toRadians(0)))
-                .lineToConstantHeading(new Vector2d(-36.22, -36.15))
+        TrajectorySequence park1 = drive.trajectorySequenceBuilder(new Pose2d(-32.81, -64.87, Math.toRadians(90)))
+                .lineToConstantHeading(new Vector2d(-32.81, -35.87))
                 .build();
 
-        TrajectorySequence park0 = drive.trajectorySequenceBuilder(new Pose2d(-12.92, -36.15, Math.toRadians(0)))
-                .lineToConstantHeading(new Vector2d(-59.68, -36.15))
+        TrajectorySequence park0 = drive.trajectorySequenceBuilder(new Pose2d(-32.81, -64.87, Math.toRadians(90)))
+                .lineToConstantHeading(new Vector2d(-32.81, -35.87))
+                .lineToConstantHeading(new Vector2d(-8.00, -35.87))
                 .build();
 
 
@@ -111,11 +113,11 @@ public class RedLeft extends LinearOpMode {
 //            claw.setPosition(clawPos);
 
             if(POSITION == 0) {
-                drive.followTrajectorySequence(park0);
+                drive.followTrajectorySequence(park2);
             } else if(POSITION == 1) {
                 drive.followTrajectorySequence(park1);
             } else if(POSITION == 2) {
-                drive.followTrajectorySequence(park2);
+                drive.followTrajectorySequence(park0);
             }
 
             break;

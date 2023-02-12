@@ -32,11 +32,9 @@ public class RedRight extends LinearOpMode {
     public int strafeInches = 40;
     public int forwardInches = 27;
 
-    public int ticks = 50;
-    public int initticks = 50;
-    public double time = 5;
-    public int numTimes = 10;
-    public double pwr = 0.8;
+    public static int MAX_TICKS = 4000;
+    public static int MIN_TICKS = 10;
+    public static double LINEAR_POWER = 0.7;
 
     Vector2d storage = new Vector2d(63.82, -12.2);
     Pose2d storagep = new Pose2d(63.52, -11.90, 0);
@@ -52,18 +50,22 @@ public class RedRight extends LinearOpMode {
 //    SleeveColorDetection sleeveDetection;
 //    OpenCvCamera camera;
 
-    public double x = 21.0; // 19.00
-    public double y = -6.0; // 4.01
+    public static double x = 22.3; // 19.00
+    public static double y = -5.3; // 4.01
+
+    public static double CLAW_MIN = 0.5;
+    public static double CLAW_MAX = 1.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         linearSlide = hardwareMap.get(DcMotorEx.class, "linearSlide");
-
         linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearSlide.setDirection(DcMotor.Direction.REVERSE);
         linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        claw = hardwareMap.servo.get("claw");
 
         drive.setPoseEstimate(new Pose2d(32.81, -64.87, Math.toRadians(90.00)));
 
@@ -74,10 +76,10 @@ public class RedRight extends LinearOpMode {
                 .build();
 
         TrajectorySequence positionPark1 = drive.trajectorySequenceBuilder(new Pose2d(x, y, Math.toRadians(45.00)))
-                .lineToConstantHeading(new Vector2d(11.88, -11.28))
+                .lineToConstantHeading(new Vector2d(14.26, -9.98)) // 11.88, -11.28
                 .build();
 
-        TrajectorySequence positionPark2 = drive.trajectorySequenceBuilder(new Pose2d(11.88, -11.28, Math.toRadians(45.00)))
+        TrajectorySequence positionPark2 = drive.trajectorySequenceBuilder(new Pose2d(14.26, -9.98, Math.toRadians(45.00)))
                 .lineToLinearHeading(new Pose2d(12.92, -36.15, Math.toRadians(90.00)))
                 .turn(Math.toRadians(90))
                 .build();
@@ -113,12 +115,12 @@ public class RedRight extends LinearOpMode {
         });
 
         /* ----------------------- GET POSITION ----------------------- */
-//        while (!isStarted()) {
-//            telemetry.addData("ROTATION: ", sleeveDetection.getParkPosition());
-//            telemetry.update();
-//
-//            POSITION = sleeveDetection.getParkPosition();
-//        }
+        while (!isStarted()) {
+            telemetry.addData("ROTATION: ", sleeveDetection.getParkPosition());
+            telemetry.update();
+
+            POSITION = sleeveDetection.getParkPosition();
+        }
 
         waitForStart();
 
@@ -164,11 +166,35 @@ public class RedRight extends LinearOpMode {
 //                linearSlide.setPower(0);
 //            }
 
+            claw.setPosition(CLAW_MAX);
+
+            timer.reset();
+            while(timer.seconds() <= 1.0) {}
+
+            linearSlide.setTargetPosition(MAX_TICKS);
+            linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            linearSlide.setPower(LINEAR_POWER);
 
             drive.followTrajectorySequence(scorePreloaded);
 
+            while(linearSlide.isBusy()) {}
+
+            claw.setPosition(CLAW_MIN);
+
+            timer.reset();
+            while(timer.seconds() <= 1.0) {}
+
             drive.followTrajectorySequence(positionPark1);
             drive.followTrajectorySequence(positionPark2);
+
+            claw.setPosition(CLAW_MAX);
+
+            timer.reset();
+            while(timer.seconds() <= 1.0) {}
+
+            linearSlide.setTargetPosition(MIN_TICKS);
+            linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            linearSlide.setPower(LINEAR_POWER);
 
             if(POSITION == 0) {
                 drive.followTrajectorySequence(park0);
@@ -178,6 +204,7 @@ public class RedRight extends LinearOpMode {
                 drive.followTrajectorySequence(park2);
             }
 
+            while(linearSlide.isBusy()) {}
 
             break;
         }

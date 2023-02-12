@@ -41,7 +41,7 @@ public class TeleOpM4 extends LinearOpMode {
     public static int encoderTicksMedium = 2800;
     public static int encoderTicksLow = 2000;
 
-    public static double linSlideMax = 4000;
+    public static double linSlideMax = 4100;
     public static double linSlideMin = 10;
 
     public static double linearPowerTesting = 0.7;
@@ -52,7 +52,7 @@ public class TeleOpM4 extends LinearOpMode {
     public static double maxDtPower = 0.7;
 
     /* CLAW VALUES */
-    public static double CLAW_MIN = 0.5;
+    public static double CLAW_MIN = 0.51;
     public static double CLAW_MAX = 1.0;
 
     @Override

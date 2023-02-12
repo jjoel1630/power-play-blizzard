@@ -24,8 +24,8 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Config
-@Autonomous(name="RightSide")
-public class RightSide extends LinearOpMode {
+@Autonomous(name="RightSideStraight")
+public class RightSideStraight extends LinearOpMode {
     /* Motor & Servo Initialization */
     DcMotorEx linearSlide;
     Servo claw;
@@ -40,12 +40,12 @@ public class RightSide extends LinearOpMode {
 
     public static int LINEAR_SLIDE_MAX_POS = 4000;
     public static int LINEAR_SLIDE_MIN_POS = 10;
-    public static double LINEAR_SLIDE_POWER = 0.6;
+    public static double LINEAR_SLIDE_POWER = 0.7;
 
-    public static double velConst = 6;
-    public static double accelConst = 6;
-    public static double angVelConst = 4.9;
-    public static double angAccelConst = 3.21;
+    public static double velConst = 15;
+
+    public static double randomX = 25.5;
+    public static double randomY = -11.5;
 
     public static int CAMERA_POSITION = 0;
 
@@ -71,42 +71,60 @@ public class RightSide extends LinearOpMode {
 
         /* Trajectories for each path */
         TrajectorySequence scorePreloaded1 = drive.trajectorySequenceBuilder(startPosition)
-                .splineToConstantHeading(new Vector2d(12.47, -56.71), Math.toRadians(90.00),
+                .lineToConstantHeading(new Vector2d(31.50, -60.00),
                         SampleMecanumDrive.getVelocityConstraint(velConst, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
                 )
                 .build();
 
         TrajectorySequence scorePreloaded2 = drive.trajectorySequenceBuilder(scorePreloaded1.end())
-                .splineTo(new Vector2d(12.47, -24.49), Math.toRadians(90.00),
+                .lineToConstantHeading(new Vector2d(12.00, -60.00),
                         SampleMecanumDrive.getVelocityConstraint(velConst, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                )
                 .build();
 
         TrajectorySequence scorePreloaded3 = drive.trajectorySequenceBuilder(scorePreloaded2.end())
-                .splineTo(new Vector2d(20.5, -6.01), Math.toRadians(45.00),
+                .lineToConstantHeading(new Vector2d(12.00, randomY),
                         SampleMecanumDrive.getVelocityConstraint(velConst, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
-        TrajectorySequence moveBackFromPole = drive.trajectorySequenceBuilder(scorePreloaded3.end())
-                .lineToConstantHeading(new Vector2d(12.47, -14.25))
+        TrajectorySequence scorePreloaded4 = drive.trajectorySequenceBuilder(scorePreloaded3.end())
+                .lineToConstantHeading(new Vector2d(randomX, randomY),
+                        SampleMecanumDrive.getVelocityConstraint(velConst, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
-        TrajectorySequence getIntoParkingZones = drive.trajectorySequenceBuilder(moveBackFromPole.end())
-                .lineToLinearHeading(new Pose2d(12.47, -35.04, Math.toRadians(90.00)))
+        TrajectorySequence scorePreloaded5 = drive.trajectorySequenceBuilder(scorePreloaded4.end())
+                .lineToConstantHeading(new Vector2d(randomX, -5.5),
+                        SampleMecanumDrive.getVelocityConstraint(velConst, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
-        TrajectorySequence parkZone0 = drive.trajectorySequenceBuilder(getIntoParkingZones.end())
+        TrajectorySequence moveBackFromPole1 = drive.trajectorySequenceBuilder(scorePreloaded4.end())
+                .lineToConstantHeading(new Vector2d(randomX, randomY))
+                .build();
+//
+        TrajectorySequence moveBackFromPole2 = drive.trajectorySequenceBuilder(moveBackFromPole1.end())
+                .lineToConstantHeading(new Vector2d(12.00, randomY))
+                .build();
+
+        TrajectorySequence moveBackFromPole3 = drive.trajectorySequenceBuilder(moveBackFromPole2.end())
+                .lineToConstantHeading(new Vector2d(12.00, -36.00))
+                .build();
+
+//
+        TrajectorySequence parkZone0 = drive.trajectorySequenceBuilder(moveBackFromPole3.end())
                 .turn(Math.toRadians(180))
                 .build();
-
-        TrajectorySequence parkZone1 = drive.trajectorySequenceBuilder(getIntoParkingZones.end())
+//
+        TrajectorySequence parkZone1 = drive.trajectorySequenceBuilder(moveBackFromPole3.end())
                 .turn(Math.toRadians(90))
                 .lineToConstantHeading(new Vector2d(36.07, -35.04))
                 .build();
-
-        TrajectorySequence parkZone2 = drive.trajectorySequenceBuilder(getIntoParkingZones.end())
+//
+        TrajectorySequence parkZone2 = drive.trajectorySequenceBuilder(moveBackFromPole3.end())
                 .turn(Math.toRadians(90))
                 .lineToConstantHeading(new Vector2d(58.64, -35.04))
                 .build();
@@ -149,30 +167,28 @@ public class RightSide extends LinearOpMode {
             while(timer.seconds() <= 1.0) {}
 
             /* Start to raise linear slide */
-            linearSlide.setTargetPosition(LINEAR_SLIDE_MAX_POS/2);
+            linearSlide.setTargetPosition(LINEAR_SLIDE_MAX_POS/4);
             linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             linearSlide.setPower(LINEAR_SLIDE_POWER);
 
             /* Start first trajectory */
             drive.followTrajectorySequence(scorePreloaded1);
 
-            timer.reset();
-            while(timer.seconds() <= 1.0) {}
-
             drive.followTrajectorySequence(scorePreloaded2);
+
+            drive.followTrajectorySequence(scorePreloaded3);
 
             /* Finish raising linear slide */
             linearSlide.setTargetPosition(LINEAR_SLIDE_MAX_POS);
             linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             linearSlide.setPower(LINEAR_SLIDE_POWER);
 
-            timer.reset();
-            while(timer.seconds() <= 1.0) {}
-
-            drive.followTrajectorySequence(scorePreloaded3);
+            drive.followTrajectorySequence(scorePreloaded4);
 
             /* If linear slide is not already up, wait for it */
             while(linearSlide.isBusy()) {}
+
+            drive.followTrajectorySequence(scorePreloaded5);
 
             /* Drop cone */
             claw.setPosition(CLAW_MIN);
@@ -181,15 +197,18 @@ public class RightSide extends LinearOpMode {
             while(timer.seconds() <= 1.0) {}
 
             /* Move the robot back with the second trajectory */
-            drive.followTrajectorySequence(moveBackFromPole);
+            drive.followTrajectorySequence(moveBackFromPole1);
+            drive.followTrajectorySequence(moveBackFromPole2);
 
             /* Lower the linear slide */
             linearSlide.setTargetPosition(LINEAR_SLIDE_MIN_POS);
             linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             linearSlide.setPower(LINEAR_SLIDE_POWER);
 
+            drive.followTrajectorySequence(moveBackFromPole3);
+
             /* Move the robot to the parking zones with the third trajectory */
-            drive.followTrajectorySequence(getIntoParkingZones);
+//            drive.followTrajectorySequence(getIntoParkingZones);
 
             /* Use camera value to park in the correct place */
             if(CAMERA_POSITION == 0) {

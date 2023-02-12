@@ -16,14 +16,14 @@ public class SleeveDetectionLeft extends OpenCvPipeline {
     // 0 for left, 1 for center, 2 for right
     private int position = 1;
 
-    public static int anchorx = 150;
-    public static int anchory = 250;
+    public static int anchorx = 30;
+    public static int anchory = 255;
 
 //    private static Point SLEEVE_TOPLEFT_ANCHOR_POINT = new Point(anchorx, anchory);
 
     // Width and height for the bounding box
-    public static int REGION_WIDTH = 10;
-    public static int REGION_HEIGHT = 40;
+    public static int REGION_WIDTH = 20;
+    public static int REGION_HEIGHT = 20;
 
     private final Scalar
             YELLOW  = new Scalar(255, 255, 0),
